@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2015: true },
   extends: [
     // All of the rules marked (recommended) on the rules page will be turned on
     'eslint:recommended',
