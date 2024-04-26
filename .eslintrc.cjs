@@ -5,6 +5,7 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
+    // All of the rules marked (recommended) on the rules page will be turned on
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
@@ -22,10 +23,10 @@ module.exports = {
   plugins: ['react-refresh', 'prettier'],
   settings: {
     react: {
-      // Nói eslint-plugin-react tự động biết version của React.
+      // Tell eslint-plugin-react automatically detect React's version.
       version: 'detect'
     },
-    // Nói ESLint cách xử lý các import
+    // Tell ESLint how to deal with imports
     'import/resolver': {
       node: {
         paths: [path.resolve(__dirname, '')],
