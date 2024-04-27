@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 export default function RegisterHeader() {
+  const location = useLocation()
+  const isRegisterMode = location.pathname.includes('register')
+
   return (
     <header className='py-5 bg-slate-200'>
       <div className='max-w-7xl mx-auto px-4'>
@@ -13,7 +16,7 @@ export default function RegisterHeader() {
                 </g>
               </svg>
             </Link>
-            <div className='ml-5 text-xl lg:text-2xl'>Đăng ký</div>
+            <div className='ml-5 text-xl lg:text-2xl'>{isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}</div>
           </nav>
         </div>
       </div>

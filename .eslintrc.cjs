@@ -39,6 +39,7 @@ module.exports = {
   },
   rules: {
     'no-console': 1,
+    '@typescript-eslint/no-unused-vars': 'warn',
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     // Tắt rule yêu cầu import React trong file jsx
     'react/react-in-jsx-scope': 'off',
