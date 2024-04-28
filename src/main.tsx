@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import App from './App.tsx'
 import './index.css'
+import { AppProvider } from './contexts/app.context.tsx'
 
 // Create a client
 const queryClient = new QueryClient({
@@ -20,8 +21,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ToastContainer />
-        <App />
+        <AppProvider>
+          <ToastContainer />
+          <App />
+        </AppProvider>
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>

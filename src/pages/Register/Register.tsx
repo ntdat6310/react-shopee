@@ -3,11 +3,12 @@ import _ from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
 import { registerAccount } from 'src/apis/auth.api'
 import Input from 'src/components/Input'
-import { ResponseApi } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
-import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 interface FormData {
   email: string
@@ -43,8 +44,7 @@ export default function Register() {
           }, 2000)
         },
         onError(error) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if (isAxiosUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+          if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
             const formError = error.response?.data.data
             if (formError) {
               Object.keys(formError).forEach((key) => {
@@ -54,9 +54,6 @@ export default function Register() {
                 })
               })
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } else if (isAxiosError<ResponseApi<any>>(error)) {
-            toast(error.response?.data.message)
           }
         }
       })

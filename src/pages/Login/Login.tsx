@@ -1,18 +1,22 @@
 import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { login } from 'src/apis/auth.api'
 import Input from 'src/components/Input'
-import { ResponseApi } from 'src/types/utils.type'
+import { AppContext } from 'src/contexts/app.context'
+import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
-import { isAxiosError, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 interface FormData {
   email: string
   password: string
 }
 export default function Login() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -24,18 +28,22 @@ export default function Login() {
 
   const rules = getRules(getValues)
 
-  const registerUserMutation = useMutation({
+  const loginMutation = useMutation({
     mutationFn: (body: FormData) => login(body)
   })
 
   const onSubmit = handleSubmit((dataOnValid) => {
-    registerUserMutation.mutate(dataOnValid, {
+    loginMutation.mutate(dataOnValid, {
       onSuccess(data) {
-        toast(data.data.message)
         reset()
+        toast(data.data.message)
+        setIsAuthenticated(true)
+        setTimeout(() => {
+          navigate('/')
+        }, 2000)
       },
       onError(error) {
-        if (isAxiosUnprocessableEntityError<ResponseApi<FormData>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
           const formError = error.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {
@@ -45,8 +53,6 @@ export default function Login() {
               })
             })
           }
-        } else if (isAxiosError<ResponseApi<FormData>>(error)) {
-          toast(error.response?.data.message)
         }
       }
     })
