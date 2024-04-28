@@ -2,14 +2,27 @@ import { Link } from 'react-router-dom'
 import LanguageDropdownMenu from '../LanguageDropdownMenu'
 import UserDropdownMenu from '../UserDropdownMenu'
 import ShoppingCart from '../ShoppingCart'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Header() {
+  const { isAuthenticated } = useContext(AppContext)
   return (
     <div className='pt-2 pb-4 bg-orange text-sm'>
       <div className='max-w-7xl mx-auto px-4'>
         <div className='flex justify-end'>
           <LanguageDropdownMenu />
-          <UserDropdownMenu />
+          {!isAuthenticated && (
+            <div className='flex items-center divide-x text-white capitalize'>
+              <Link to='/register' className='px-3 hover:text-gray-200'>
+                Đăng ký
+              </Link>
+              <Link to='/login' className='px-3 hover:text-gray-200'>
+                Đăng nhập
+              </Link>
+            </div>
+          )}
+          {isAuthenticated && <UserDropdownMenu />}
         </div>
         <div className='grid grid-cols-12 gap-2 sm:gap-4 mt-2'>
           <Link to={'/'} className='col-span-2 hidden lg:block'>

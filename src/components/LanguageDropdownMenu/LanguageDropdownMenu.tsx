@@ -10,7 +10,7 @@ export default function LanguageDropdownMenu() {
         </div>
       }
     >
-      <div className='flex items-center text-white hover:text-gray-300 cursor-pointer'>
+      <div className='flex items-center text-white hover:text-gray-200 cursor-pointer'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'

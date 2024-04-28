@@ -34,15 +34,13 @@ class Http {
     // Add a response interceptors
     this.instance.interceptors.response.use(
       (response) => {
-        console.log('response', response)
         const { url } = response.config
         if (url === '/login') {
           const access_token = (response.data as AuthResponse).data.access_token
           this.setAccessToken(access_token)
-        } else if (url === 'logout') {
+        } else if (url === '/logout') {
           this.clearAccessToken()
         }
-
         return response
       },
       function (error: AxiosError) {

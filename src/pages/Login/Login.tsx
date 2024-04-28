@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { login } from 'src/apis/auth.api'
@@ -16,7 +16,6 @@ interface FormData {
 }
 export default function Login() {
   const { setIsAuthenticated } = useContext(AppContext)
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -36,11 +35,12 @@ export default function Login() {
     loginMutation.mutate(dataOnValid, {
       onSuccess(data) {
         reset()
-        toast(data.data.message)
-        setIsAuthenticated(true)
+        toast.success(data.data.message, {
+          autoClose: 500
+        })
         setTimeout(() => {
-          navigate('/')
-        }, 2000)
+          setIsAuthenticated(true)
+        }, 1000)
       },
       onError(error) {
         if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -62,7 +62,7 @@ export default function Login() {
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-16 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form action='' className='p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
+            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
               <div className='text-xl lg:text-2xl'>Đăng nhập</div>
               <Input
                 name='email'

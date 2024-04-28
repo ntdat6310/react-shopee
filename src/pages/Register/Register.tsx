@@ -33,42 +33,37 @@ export default function Register() {
 
   const navigate = useNavigate()
 
-  const onSubmit = handleSubmit(
-    (dataOnValid) => {
-      registerUserMutation.mutate(_.omit(dataOnValid, ['confirm_password']), {
-        onSuccess(data) {
-          toast(data.data.message)
-          reset()
-          setTimeout(() => {
-            navigate('/login')
-          }, 2000)
-        },
-        onError(error) {
-          if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
-            const formError = error.response?.data.data
-            if (formError) {
-              Object.keys(formError).forEach((key) => {
-                setError(key as keyof Omit<FormData, 'confirm_password'>, {
-                  type: 'server',
-                  message: formError[key as keyof Omit<FormData, 'confirm_password'>]
-                })
+  const onSubmit = handleSubmit((dataOnValid) => {
+    registerUserMutation.mutate(_.omit(dataOnValid, ['confirm_password']), {
+      onSuccess(data) {
+        toast(data.data.message)
+        reset()
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000)
+      },
+      onError(error) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              setError(key as keyof Omit<FormData, 'confirm_password'>, {
+                type: 'server',
+                message: formError[key as keyof Omit<FormData, 'confirm_password'>]
               })
-            }
+            })
           }
         }
-      })
-    },
-    (dataOnInvalid) => {
-      console.log(dataOnInvalid)
-    }
-  )
+      }
+    })
+  })
 
   return (
     <div className='bg-orange'>
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-16 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form action='' className='p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
+            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
               <div className='text-xl lg:text-2xl'>Đăng ký</div>
               <Input
                 name='email'
