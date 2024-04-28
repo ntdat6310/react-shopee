@@ -1,9 +1,15 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum'
-import { clearAccessTokenFromLocalStorage, getAccessTokenFromLocalStorage, saveAccessTokenToLocalStorage } from './auth'
-import { AuthResponse } from 'src/types/auth.types'
 import path from 'src/constants/path'
+import { AuthResponse } from 'src/types/auth.types'
+import {
+  clearAccessTokenFromLocalStorage,
+  clearProfileFromLocalStorage,
+  getAccessTokenFromLocalStorage,
+  setAccessTokenToLocalStorage,
+  setProfileToLocalStorage
+} from './auth'
 class Http {
   instance: AxiosInstance
   private accessToken: string
@@ -27,20 +33,21 @@ class Http {
         return config
       },
       function (error) {
-        // Do something with request error
         return Promise.reject(error)
       }
     )
 
-    // Add a response interceptors
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
         if (url === path.login) {
-          const access_token = (response.data as AuthResponse).data.access_token
+          const data = response.data as AuthResponse
+          const access_token = data.data.access_token
           this.setAccessToken(access_token)
+          setProfileToLocalStorage(data.data.user)
         } else if (url === path.logout) {
           this.clearAccessToken()
+          clearProfileFromLocalStorage()
         }
         return response
       },
@@ -63,7 +70,7 @@ class Http {
 
   private setAccessToken = (access_token: string) => {
     this.accessToken = access_token
-    saveAccessTokenToLocalStorage(access_token)
+    setAccessTokenToLocalStorage(access_token)
   }
 }
 

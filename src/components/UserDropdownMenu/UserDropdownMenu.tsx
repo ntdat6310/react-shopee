@@ -8,11 +8,13 @@ import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
 
 export default function UserDropdownMenu() {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
+
   const logoutMutation = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: logout,
     onSuccess(data) {
+      setProfile(null)
       toast.success(data.data.message, {
         autoClose: 500
       })
@@ -49,7 +51,9 @@ export default function UserDropdownMenu() {
             className='w-full h-full rounded-full object-cover'
           />
         </div>
-        <div className='ml-2'>Ronaldo</div>
+        <div className='ml-2 truncate max-w-[120px]'>
+          {profile?.email ? `${profile?.email.substring(0, profile?.email.indexOf('@'))}` : 'user'}
+        </div>
       </div>
     </Popover>
   )

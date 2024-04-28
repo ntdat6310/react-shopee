@@ -17,7 +17,7 @@ interface FormData {
   password: string
 }
 export default function Login() {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const {
     register,
     handleSubmit,
@@ -37,6 +37,7 @@ export default function Login() {
     loginMutation.mutate(dataOnValid, {
       onSuccess(data) {
         reset()
+        setProfile(data.data.data.user)
         toast.success(data.data.message, {
           autoClose: 500
         })
