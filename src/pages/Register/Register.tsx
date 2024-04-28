@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { registerAccount } from 'src/apis/auth.api'
+import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
@@ -36,11 +37,13 @@ export default function Register() {
   const onSubmit = handleSubmit((dataOnValid) => {
     registerUserMutation.mutate(_.omit(dataOnValid, ['confirm_password']), {
       onSuccess(data) {
-        toast(data.data.message)
         reset()
+        toast.success(data.data.message, {
+          autoClose: 500
+        })
         setTimeout(() => {
           navigate('/login')
-        }, 2000)
+        }, 1000)
       },
       onError(error) {
         if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
@@ -93,12 +96,14 @@ export default function Register() {
                 className='mt-2'
               />
               <div className='mt-2'>
-                <button
-                  className='w-full bg-orange hover:opacity-90 uppercase text-white py-4 px-2 rounded-md'
+                <Button
                   type='submit'
+                  className='w-full bg-orange hover:opacity-90 uppercase text-white py-4 px-2 rounded-md flex items-center justify-center gap-2'
+                  isLoading={registerUserMutation.isPending}
+                  disabled={registerUserMutation.isPending}
                 >
                   Đăng ký
-                </button>
+                </Button>
               </div>
               <div className='mt-6 text-center text-sm'>
                 <span>Bạn đã có tài khoản</span>

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import { login } from 'src/apis/auth.api'
+import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/utils.type'
@@ -83,12 +84,14 @@ export default function Login() {
                 className='mt-2'
               />
               <div className='mt-4'>
-                <button
+                <Button
                   type='submit'
-                  className='w-full bg-orange hover:opacity-90 uppercase text-white py-4 px-2 rounded-md'
+                  className='w-full bg-orange hover:opacity-90 uppercase text-white py-4 px-2 rounded-md flex items-center justify-center gap-2'
+                  isLoading={loginMutation.isPending}
+                  disabled={loginMutation.isPending}
                 >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className='mt-6 text-center text-sm'>
                 <span>Bạn chưa có tài khoản</span>
