@@ -1,16 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  FloatingArrow,
-  FloatingPortal,
-  arrow,
-  autoUpdate,
-  offset,
-  safePolygon,
-  useFloating,
-  useHover,
-  useInteractions
-} from '@floating-ui/react'
-import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import LanguageDropdownMenu from '../LanguageDropdownMenu'
 import UserDropdownMenu from '../UserDropdownMenu'

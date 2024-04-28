@@ -1,40 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  FloatingArrow,
-  FloatingPortal,
-  arrow,
-  autoUpdate,
-  offset,
-  safePolygon,
-  useFloating,
-  useHover,
-  useInteractions
-} from '@floating-ui/react'
-import { useRef, useState } from 'react'
+import Popover from '../Popover'
 
 export default function LanguageDropdownMenu() {
-  const arrowRef = useRef(null)
-  const [isOpen, setIsOpen] = useState(false)
-  const { refs, floatingStyles, context } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    middleware: [
-      offset(10),
-      arrow({
-        element: arrowRef
-      })
-    ],
-    whileElementsMounted: autoUpdate
-  })
-  const hover = useHover(context, { handleClose: safePolygon() })
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover])
   return (
-    <>
-      <div
-        className='flex items-center text-white hover:text-gray-300 cursor-pointer'
-        ref={refs.setReference}
-        {...getReferenceProps()}
-      >
+    <Popover
+      renderPopover={
+        <div className='bg-white flex flex-col shadow-md text-gray-600 text-[20px]'>
+          <button className='py-2 px-5 hover:bg-gray-200 transition-all'>Tiếng Việt</button>
+          <button className='py-2 px-5 hover:bg-gray-200 transition-all'>English</button>
+        </div>
+      }
+    >
+      <div className='flex items-center text-white hover:text-gray-300 cursor-pointer'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -61,20 +37,6 @@ export default function LanguageDropdownMenu() {
           <path strokeLinecap='round' strokeLinejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' />
         </svg>
       </div>
-      {isOpen && (
-        <FloatingPortal>
-          <div
-            ref={refs.setFloating}
-            style={floatingStyles}
-            {...getFloatingProps()}
-            className='bg-white flex flex-col shadow-md'
-          >
-            <button className='py-2 px-5 hover:bg-gray-200'>Tiếng Việt</button>
-            <button className='py-2 px-5 hover:bg-gray-200'>English</button>
-            <FloatingArrow ref={arrowRef} context={context} width={30} height={15} fill='white' />
-          </div>
-        </FloatingPortal>
-      )}
-    </>
+    </Popover>
   )
 }
