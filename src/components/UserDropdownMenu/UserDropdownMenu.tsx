@@ -5,6 +5,7 @@ import Popover from '../Popover'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import path from 'src/constants/path'
 
 export default function UserDropdownMenu() {
   const { setIsAuthenticated } = useContext(AppContext)
@@ -30,7 +31,7 @@ export default function UserDropdownMenu() {
     <Popover
       renderPopover={
         <div className='bg-white flex flex-col shadow-md items-start text-gray-600 text-[20px] '>
-          <Link to='/profile'>
+          <Link to={path.profile}>
             <div className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>Tài khoản của tôi</div>
           </Link>
           <button className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>Đơn mua</button>

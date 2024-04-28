@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { login } from 'src/apis/auth.api'
 import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
@@ -95,7 +96,7 @@ export default function Login() {
               </div>
               <div className='mt-6 text-center text-sm'>
                 <span>Bạn chưa có tài khoản</span>
-                <Link to={'/register'} className='text-orange ml-2 font-bold'>
+                <Link to={path.register} className='text-orange ml-2 font-bold'>
                   Đăng ký
                 </Link>
               </div>

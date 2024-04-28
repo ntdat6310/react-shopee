@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { registerAccount } from 'src/apis/auth.api'
 import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
+import path from 'src/constants/path'
 import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
@@ -42,7 +43,7 @@ export default function Register() {
           autoClose: 500
         })
         setTimeout(() => {
-          navigate('/login')
+          navigate(path.login)
         }, 1000)
       },
       onError(error) {
@@ -107,7 +108,7 @@ export default function Register() {
               </div>
               <div className='mt-6 text-center text-sm'>
                 <span>Bạn đã có tài khoản</span>
-                <Link to={'/login'} className='text-orange ml-2 font-bold'>
+                <Link to={path.login} className='text-orange ml-2 font-bold'>
                   Đăng nhập
                 </Link>
               </div>

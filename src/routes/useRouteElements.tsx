@@ -8,11 +8,12 @@ import Profile from 'src/pages/Profile'
 import Register from 'src/pages/Register'
 import ProtectedRoute from './ProtectedRoute'
 import RejectedRoute from './RejectedRoute'
+import path from 'src/constants/path'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: path.home,
       index: true,
       element: <MainLayout />
     },
@@ -35,7 +36,7 @@ export default function useRouteElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <RegisterHeader />
@@ -45,7 +46,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <RegisterHeader />
