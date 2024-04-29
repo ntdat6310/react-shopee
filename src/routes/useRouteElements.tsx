@@ -9,6 +9,7 @@ import Register from 'src/pages/Register'
 import ProtectedRoute from './ProtectedRoute'
 import RejectedRoute from './RejectedRoute'
 import path from 'src/constants/path'
+import ProductList from 'src/pages/ProductList'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -56,6 +57,14 @@ export default function useRouteElements() {
           )
         }
       ]
+    },
+    {
+      path: '/productlist',
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
     }
   ])
   return routeElements
