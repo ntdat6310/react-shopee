@@ -10,11 +10,11 @@ interface Props {
 export default function StarList({
   numberOfStars = 5,
   numberOfStarsFilled = 0,
-  fill = 'yellow',
+  fill = '#ffa727',
   className = ''
 }: Props) {
   return (
-    <div className={`flex items-center gap-1 ${className}`}>
+    <div className={`flex items-center ${className}`}>
       {Array(numberOfStars)
         .fill(0)
         .map((_, index) => {

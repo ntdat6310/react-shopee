@@ -89,11 +89,11 @@ export default function AsideFilter() {
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
       <div className='capitalize mb-4'>Đánh giá</div>
       <div className='pl-5 flex flex-col gap-3'>
-        <StarList numberOfStarsFilled={5} fill='#ffa727' className='cursor-pointer hover:opacity-50' />
-        <StarList numberOfStarsFilled={4} fill='#ffa727' className='cursor-pointer hover:opacity-50' />
-        <StarList numberOfStarsFilled={3} fill='#ffa727' className='cursor-pointer hover:opacity-50' />
-        <StarList numberOfStarsFilled={2} fill='#ffa727' className='cursor-pointer hover:opacity-50' />
-        <StarList numberOfStarsFilled={1} fill='#ffa727' className='cursor-pointer hover:opacity-50' />
+        <StarList numberOfStarsFilled={5} className='cursor-pointer hover:opacity-50 gap-1' />
+        <StarList numberOfStarsFilled={4} className='cursor-pointer hover:opacity-50 gap-1' />
+        <StarList numberOfStarsFilled={3} className='cursor-pointer hover:opacity-50 gap-1' />
+        <StarList numberOfStarsFilled={2} className='cursor-pointer hover:opacity-50 gap-1' />
+        <StarList numberOfStarsFilled={1} className='cursor-pointer hover:opacity-50 gap-1' />
       </div>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
