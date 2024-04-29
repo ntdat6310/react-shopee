@@ -37,6 +37,7 @@ export default function Header() {
             <div className='bg-white p-1 flex items-center rounded-md'>
               <input
                 type='text'
+                placeholder='Tìm kiếm sản phẩm'
                 className='text-black px-3 py-2 flex-grow border-none outline-none text-lg bg-transparent w-[80%] sm:w-auto'
               />
               <button className='bg-orange h-10 w-10 sm:w-14 flex justify-center items-center text-white rounded-md group hover:opacity-90'>
