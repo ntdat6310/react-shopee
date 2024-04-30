@@ -1,10 +1,20 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, createSearchParams } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
+import useQueryConfig from 'src/hooks/useQueryConfig'
 
 export default function AsideFilter() {
+  const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
+
+  const handleClickStarList = (star: number) => {
+    navigate({
+      pathname: path.products,
+      search: createSearchParams({ ...queryConfig, page: '1', rating_filter: star.toString() }).toString()
+    })
+  }
   return (
     <div>
       <div className='flex items-center gap-2'>
@@ -89,21 +99,43 @@ export default function AsideFilter() {
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
       <div className='capitalize mb-4'>Đánh giá</div>
       <div className='pl-5 flex flex-col gap-3'>
-        <StarList numberOfStarsFilled={5} className='cursor-pointer hover:opacity-50 gap-1' />
+        <div className=''>
+          <StarList
+            onClick={handleClickStarList}
+            numberOfStarsFilled={5}
+            className='cursor-pointer hover:opacity-50 gap-1'
+          />
+        </div>
         <div className='flex gap-2 text-sm'>
-          <StarList numberOfStarsFilled={4} className='cursor-pointer hover:opacity-50 gap-1' />
+          <StarList
+            onClick={handleClickStarList}
+            numberOfStarsFilled={4}
+            className='cursor-pointer hover:opacity-50 gap-1'
+          />
           Trở lên
         </div>
         <div className='flex gap-2 text-sm'>
-          <StarList numberOfStarsFilled={3} className='cursor-pointer hover:opacity-50 gap-1' />
+          <StarList
+            onClick={handleClickStarList}
+            numberOfStarsFilled={3}
+            className='cursor-pointer hover:opacity-50 gap-1'
+          />
           Trở lên
         </div>
         <div className='flex gap-2 text-sm'>
-          <StarList numberOfStarsFilled={2} className='cursor-pointer hover:opacity-50 gap-1' />
+          <StarList
+            onClick={handleClickStarList}
+            numberOfStarsFilled={2}
+            className='cursor-pointer hover:opacity-50 gap-1'
+          />
           Trở lên
         </div>
         <div className='flex gap-2 text-sm'>
-          <StarList numberOfStarsFilled={1} className='cursor-pointer hover:opacity-50 gap-1' />
+          <StarList
+            onClick={handleClickStarList}
+            numberOfStarsFilled={1}
+            className='cursor-pointer hover:opacity-50 gap-1'
+          />
           Trở lên
         </div>
       </div>

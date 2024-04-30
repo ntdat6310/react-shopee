@@ -5,22 +5,29 @@ interface Props {
   numberOfStarsFilled?: number
   fill?: string
   className?: string
+  onClick: (star: number) => void
 }
 
 export default function StarList({
   numberOfStars = 5,
   numberOfStarsFilled = 0,
   fill = '#ffa727',
-  className = ''
+  className = '',
+  onClick
 }: Props) {
   return (
-    <div className={`flex items-center ${className}`}>
+    <button
+      className={`flex items-center ${className}`}
+      onClick={() => {
+        onClick(numberOfStarsFilled)
+      }}
+    >
       {Array(numberOfStars)
         .fill(0)
         .map((_, index) => {
           const shouldFillStar = index < numberOfStarsFilled
           return <Star key={index} fill={shouldFillStar ? fill : 'none'} />
         })}
-    </div>
+    </button>
   )
 }

@@ -2,8 +2,8 @@ import { Link, createSearchParams } from 'react-router-dom'
 import ArrowLeft from './ArrowLeft'
 import ArrowRight from './ArrowRight'
 import ThreeDot from './ThreeDot'
-import { QueryConfig } from 'src/pages/ProductList/ProductList'
 import path from 'src/constants/path'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 
 interface Props {
   totalPages: number
