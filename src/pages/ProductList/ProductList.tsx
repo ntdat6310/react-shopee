@@ -4,6 +4,7 @@ import useQueryParams from 'src/hooks/useQueryParams'
 import AsideFilter from './AsideFilter'
 import ProductItem from './ProductItem'
 import SortProductList from './SortProductList'
+import Pagination from 'src/components/Pagination/Pagination'
 
 export default function ProductList() {
   const searchParams = useQueryParams()
@@ -32,6 +33,7 @@ export default function ProductList() {
                   )
                 })}
             </div>
+            <Pagination currentPage={5} totalPages={9} range={2} />
           </div>
         </div>
       </div>
