@@ -26,20 +26,25 @@ export default function ProductList() {
           <div className='hidden md:block md:col-span-3 px-2'>
             <AsideFilter />
           </div>
-          <div className='col-span-12 md:col-span-9'>
-            <SortProductList />
-            <div className='mt-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
-              {data &&
-                data.data.data?.products?.map((product) => {
+          {data && (
+            <div className='col-span-12 md:col-span-9'>
+              <SortProductList total_page={data.data.data?.pagination?.page_size ?? 1} />
+              <div className='mt-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+                {data.data.data?.products?.map((product) => {
                   return (
                     <div className='col-span-1' key={product._id}>
                       <ProductItem product={product} />
                     </div>
                   )
                 })}
+              </div>
+              <Pagination
+                queryConfig={queryConfig}
+                totalPages={data?.data.data?.pagination?.page_size ?? 1}
+                range={2}
+              />
             </div>
-            <Pagination queryConfig={queryConfig} totalPages={data?.data.data?.pagination?.page_size ?? 1} range={2} />
-          </div>
+          )}
         </div>
       </div>
     </div>
