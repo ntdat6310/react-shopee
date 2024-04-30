@@ -1,19 +1,22 @@
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams } from 'react-router-dom'
 import ArrowLeft from './ArrowLeft'
 import ArrowRight from './ArrowRight'
 import ThreeDot from './ThreeDot'
+import { QueryConfig } from 'src/pages/ProductList/ProductList'
+import path from 'src/constants/path'
 
 interface Props {
   totalPages: number
   range?: number
-  currentPage: number
+  queryConfig: QueryConfig
 }
 
 const FIRST_PAGE = 1
 const CLICKABLE_CSS = 'h-8 w-8 rounded shadow-sm bg-white flex items-center justify-center'
 const UNCLICKABLE_CSS = `${CLICKABLE_CSS} bg-opacity-60 cursor-not-allowed`
 
-export default function Pagination({ totalPages: LAST_PAGE, currentPage, range = 2 }: Props) {
+export default function Pagination({ totalPages: LAST_PAGE, queryConfig, range = 2 }: Props) {
+  const currentPage = Number(queryConfig.page)
   const firstRange = Math.max(currentPage - range, 1)
   const lastRange = Math.min(currentPage + range, LAST_PAGE)
   let isHeadDotShowed = false
@@ -26,7 +29,13 @@ export default function Pagination({ totalPages: LAST_PAGE, currentPage, range =
           <ArrowLeft />
         </span>
       ) : (
-        <Link to='#' className={CLICKABLE_CSS}>
+        <Link
+          to={{
+            pathname: path.products,
+            search: createSearchParams({ ...queryConfig, page: (currentPage - 1).toString() }).toString()
+          }}
+          className={CLICKABLE_CSS}
+        >
           <ArrowLeft />
         </Link>
       )}
@@ -56,7 +65,14 @@ export default function Pagination({ totalPages: LAST_PAGE, currentPage, range =
               {pageIndex}
             </span>
           ) : (
-            <Link to='#' className={CLICKABLE_CSS} key={pageIndex}>
+            <Link
+              to={{
+                pathname: path.products,
+                search: createSearchParams({ ...queryConfig, page: pageIndex.toString() }).toString()
+              }}
+              className={CLICKABLE_CSS}
+              key={pageIndex}
+            >
               {pageIndex}
             </Link>
           )
@@ -67,7 +83,13 @@ export default function Pagination({ totalPages: LAST_PAGE, currentPage, range =
           <ArrowRight />
         </span>
       ) : (
-        <Link to='#' className={CLICKABLE_CSS}>
+        <Link
+          to={{
+            pathname: path.products,
+            search: createSearchParams({ ...queryConfig, page: (currentPage + 1).toString() }).toString()
+          }}
+          className={CLICKABLE_CSS}
+        >
           <ArrowRight />
         </Link>
       )}

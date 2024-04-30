@@ -1,17 +1,39 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { omitBy, isUndefined } from 'lodash'
 import productApi from 'src/apis/product.api'
 import useQueryParams from 'src/hooks/useQueryParams'
 import AsideFilter from './AsideFilter'
 import ProductItem from './ProductItem'
 import SortProductList from './SortProductList'
 import Pagination from 'src/components/Pagination/Pagination'
+import { ProductConfig } from 'src/types/product.type'
+
+export type QueryConfig = {
+  [key in keyof ProductConfig]: string
+}
 
 export default function ProductList() {
-  const searchParams = useQueryParams()
+  const queryParams = useQueryParams()
+  const queryConfig: QueryConfig = omitBy(
+    {
+      page: queryParams.page || '1',
+      limit: queryParams.limit || '5',
+      sort_by: queryParams.sort_by,
+      order: queryParams.order,
+      category: queryParams.category,
+      exclude: queryParams.exclude,
+      rating_filter: queryParams.rating_filter,
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      name: queryParams.name
+    },
+    isUndefined
+  )
 
   const { data } = useQuery({
-    queryKey: ['products', searchParams],
-    queryFn: () => productApi.getProducts(searchParams)
+    queryKey: ['products', queryConfig],
+    queryFn: () => productApi.getProducts(queryConfig as ProductConfig),
+    placeholderData: keepPreviousData
   })
 
   return (
@@ -33,7 +55,7 @@ export default function ProductList() {
                   )
                 })}
             </div>
-            <Pagination currentPage={5} totalPages={9} range={2} />
+            <Pagination queryConfig={queryConfig} totalPages={data?.data.data?.pagination?.page_size ?? 1} range={2} />
           </div>
         </div>
       </div>

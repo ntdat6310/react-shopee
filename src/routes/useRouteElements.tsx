@@ -59,7 +59,7 @@ export default function useRouteElements() {
       ]
     },
     {
-      path: '/productlist',
+      path: path.products,
       element: (
         <MainLayout>
           <ProductList />
