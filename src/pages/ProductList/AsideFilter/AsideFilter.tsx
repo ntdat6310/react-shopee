@@ -48,9 +48,10 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
   }
 
   const handleClearAllFilter = () => {
+    const newParams = omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])
     navigate({
       pathname: path.products,
-      search: createSearchParams({ page: '1' }).toString()
+      search: createSearchParams({ ...newParams, page: '1' }).toString()
     })
   }
 
@@ -66,6 +67,9 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
     })
   })
 
+  const isStarListActive = (rating: number) => {
+    return queryConfig.rating_filter && queryConfig.rating_filter === String(rating)
+  }
   return (
     <div>
       <div
@@ -188,21 +192,34 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
       <div className='capitalize mb-4'>Đánh giá</div>
-      <div className='pl-5 flex flex-col gap-3'>
-        <div className=''>
-          <StarList
-            onClick={handleClickStarList}
-            numberOfStarsFilled={5}
-            className='cursor-pointer hover:opacity-50 gap-1'
-          />
-        </div>
-        <div className='flex gap-2 text-sm'>
+      <div className='pl-3 flex flex-col gap-1 items-baseline'>
+        {Array(5)
+          .fill(0)
+          .map((_, index) => {
+            const rating = 5 - index
+            return (
+              <div
+                className={classNames('py-1 px-1 rounded text-sm flex gap-2', {
+                  'bg-gray-300': isStarListActive(rating)
+                })}
+                key={index}
+              >
+                <StarList
+                  onClick={handleClickStarList}
+                  numberOfStarsFilled={rating}
+                  className='cursor-pointer hover:opacity-50 gap-1'
+                />
+                {rating < 5 && <span>Trở lên</span>}
+              </div>
+            )
+          })}
+
+        {/* <div className='flex gap-2 text-sm'>
           <StarList
             onClick={handleClickStarList}
             numberOfStarsFilled={4}
             className='cursor-pointer hover:opacity-50 gap-1'
           />
-          Trở lên
         </div>
         <div className='flex gap-2 text-sm'>
           <StarList
@@ -227,7 +244,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             className='cursor-pointer hover:opacity-50 gap-1'
           />
           Trở lên
-        </div>
+        </div> */}
       </div>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
