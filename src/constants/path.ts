@@ -5,7 +5,8 @@ const path = {
   profile: '/profile',
   logout: '/logout',
   product: '/product',
-  products: '/products'
+  products: '/products',
+  categories: '/categories'
 }
 
 export default path

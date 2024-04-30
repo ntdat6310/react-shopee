@@ -1,12 +1,17 @@
+import classNames from 'classnames'
 import { Link, useNavigate, createSearchParams } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
-import useQueryConfig from 'src/hooks/useQueryConfig'
+import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
+import { Category } from 'src/types/category.type'
 
-export default function AsideFilter() {
-  const queryConfig = useQueryConfig()
+interface Props {
+  categories: Category[]
+  queryConfig: QueryConfig
+}
+export default function AsideFilter({ categories, queryConfig }: Props) {
   const navigate = useNavigate()
 
   const handleClickStarList = (star: number) => {
@@ -15,9 +20,20 @@ export default function AsideFilter() {
       search: createSearchParams({ ...queryConfig, page: '1', rating_filter: star.toString() }).toString()
     })
   }
+
+  const handleClearAllFilter = () => {
+    navigate({
+      pathname: path.products,
+      search: createSearchParams({ page: '1' }).toString()
+    })
+  }
   return (
     <div>
-      <div className='flex items-center gap-2'>
+      <div
+        className={classNames('flex items-center gap-2', {
+          'text-orange font-semibold': !queryConfig.category
+        })}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -32,31 +48,34 @@ export default function AsideFilter() {
             d='M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'
           />
         </svg>
-        <div className='font-bold capitalize'>Tất cả danh mục</div>
+        <Link
+          to={{
+            pathname: path.products,
+            search: createSearchParams({ page: '1' }).toString()
+          }}
+          className='font-bold capitalize'
+        >
+          Tất cả danh mục
+        </Link>
       </div>
       <div className='my-4 h-[1px] bg-gray-300'></div>
       <div className='pl-5 flex flex-col gap-3 text-sm'>
-        <Link to={path.home} className='capitalize'>
-          Thời trang nam
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Áo khoác
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Quần jeans
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Quần dài
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Quần short
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Áo
-        </Link>
-        <Link to={path.home} className='capitalize'>
-          Đồ ngủ
-        </Link>
+        {categories.map((categoryItem) => {
+          return (
+            <Link
+              to={{
+                pathname: path.products,
+                search: createSearchParams({ page: '1', category: categoryItem._id }).toString()
+              }}
+              className={classNames('capitalize', {
+                'text-orange font-semibold': categoryItem._id === queryConfig.category
+              })}
+              key={categoryItem._id}
+            >
+              {categoryItem.name}
+            </Link>
+          )
+        })}
       </div>
       <div className='mt-10 flex items-center gap-2'>
         <svg
@@ -141,7 +160,10 @@ export default function AsideFilter() {
       </div>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
-      <Button className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'>
+      <Button
+        onClick={handleClearAllFilter}
+        className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'
+      >
         Xóa tất cả
       </Button>
     </div>

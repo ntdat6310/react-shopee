@@ -7,11 +7,12 @@ import SortProductList from './SortProductList'
 import Pagination from 'src/components/Pagination/Pagination'
 import { ProductConfig } from 'src/types/product.type'
 import useQueryConfig from 'src/hooks/useQueryConfig'
+import categoryApi from 'src/apis/category.api'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
 
-  const { data } = useQuery({
+  const { data: dataProducts } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => productApi.getProducts(queryConfig as ProductConfig),
     placeholderData: keepPreviousData,
@@ -19,18 +20,25 @@ export default function ProductList() {
     gcTime: 5 * 60 * 1000
   })
 
+  const { data: dataCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: categoryApi.getCategories
+  })
+
+  console.log('dataCategories')
+
   return (
     <div className='bg-gray-200 py-6'>
       <div className='max-w-7xl mx-auto px-4 xl:px-10'>
         <div className='grid grid-cols-12 gap-6'>
           <div className='hidden md:block md:col-span-3 px-2'>
-            <AsideFilter />
+            <AsideFilter categories={dataCategories?.data.data ?? []} queryConfig={queryConfig} />
           </div>
-          {data && (
+          {dataProducts && (
             <div className='col-span-12 md:col-span-9'>
-              <SortProductList total_page={data.data.data?.pagination?.page_size ?? 1} />
+              <SortProductList total_page={dataProducts.data.data?.pagination?.page_size ?? 1} />
               <div className='mt-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
-                {data.data.data?.products?.map((product) => {
+                {dataProducts.data.data?.products?.map((product) => {
                   return (
                     <div className='col-span-1' key={product._id}>
                       <ProductItem product={product} />
@@ -40,7 +48,7 @@ export default function ProductList() {
               </div>
               <Pagination
                 queryConfig={queryConfig}
-                totalPages={data?.data.data?.pagination?.page_size ?? 1}
+                totalPages={dataProducts?.data.data?.pagination?.page_size ?? 1}
                 range={2}
               />
             </div>
