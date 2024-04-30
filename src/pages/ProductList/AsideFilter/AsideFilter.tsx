@@ -1,18 +1,44 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import classNames from 'classnames'
-import { Link, useNavigate, createSearchParams } from 'react-router-dom'
+import { omit } from 'lodash'
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
-import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
 import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
-import useQueryConfig, { QueryConfig } from 'src/hooks/useQueryConfig'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
-
+import { Schema, schema } from 'src/utils/rules'
 interface Props {
   categories: Category[]
   queryConfig: QueryConfig
 }
+
+type FormData = Pick<Schema, 'price_max' | 'price_min'>
+
+const priceSchema = schema.pick(['price_min', 'price_max'])
 export default function AsideFilter({ categories, queryConfig }: Props) {
+  const {
+    control,
+    handleSubmit,
+    trigger,
+    setValue,
+    formState: { errors }
+  } = useForm<FormData>({
+    defaultValues: {
+      price_min: queryConfig.price_min ?? '',
+      price_max: queryConfig.price_max ?? ''
+    },
+    resolver: yupResolver(priceSchema)
+  })
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setValue('price_min', queryConfig.price_min ?? '')
+    setValue('price_max', queryConfig.price_max ?? '')
+  }, [setValue, queryConfig])
 
   const handleClickStarList = (star: number) => {
     navigate({
@@ -27,6 +53,19 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
       search: createSearchParams({ page: '1' }).toString()
     })
   }
+
+  const onSubmitPriceFilter = handleSubmit((dataOnValid) => {
+    navigate({
+      pathname: path.products,
+      search: createSearchParams({
+        ...queryConfig,
+        page: '1',
+        price_min: dataOnValid.price_min ?? '',
+        price_max: dataOnValid.price_max ?? ''
+      }).toString()
+    })
+  })
+
   return (
     <div>
       <div
@@ -51,7 +90,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         <Link
           to={{
             pathname: path.products,
-            search: createSearchParams({ page: '1' }).toString()
+            search: createSearchParams(omit({ ...queryConfig, page: '1' }, ['category'])).toString()
           }}
           className='font-bold capitalize'
         >
@@ -65,7 +104,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             <Link
               to={{
                 pathname: path.products,
-                search: createSearchParams({ page: '1', category: categoryItem._id }).toString()
+                search: createSearchParams({ ...queryConfig, page: '1', category: categoryItem._id }).toString()
               }}
               className={classNames('capitalize', {
                 'text-orange font-semibold': categoryItem._id === queryConfig.category
@@ -95,25 +134,57 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         <div className='capitalize font-bold'>bộ lọc tìm kiếm</div>
       </div>
       <div className='my-4 h-[1px] bg-gray-300'></div>
-      <div className='capitalize'>Khoảng giá</div>
-      <div className='flex items-center justify-between gap-2 py-4'>
-        <Input
-          placeholder='Từ'
-          isErrorPossible={false}
-          type='number'
-          classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
-        />
-        <div className='h-[1px] w-5 bg-black'></div>
-        <Input
-          placeholder='Đến'
-          isErrorPossible={false}
-          type='number'
-          classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
-        />
-      </div>
-      <Button className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'>
-        Áp dụng
-      </Button>
+      <div className='capitalize mb-4'>Khoảng giá</div>
+      <form onSubmit={onSubmitPriceFilter}>
+        <div className='flex items-center justify-between gap-2'>
+          <Controller
+            control={control}
+            name='price_min'
+            render={({ field }) => {
+              return (
+                <InputNumber
+                  placeholder='Từ'
+                  type='text'
+                  classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
+                  onChange={(event) => {
+                    field.onChange(event)
+                    trigger() // Validate all input fields
+                  }}
+                  value={field.value}
+                />
+              )
+            }}
+          />
+          <div className='h-[1px] w-5 bg-black'></div>
+          <Controller
+            control={control}
+            name='price_max'
+            render={({ field }) => {
+              return (
+                <InputNumber
+                  placeholder='Đến'
+                  type='text'
+                  classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
+                  onChange={(event) => {
+                    field.onChange(event)
+                    trigger() // Validate all input fields
+                  }}
+                  value={field.value}
+                />
+              )
+            }}
+          />
+        </div>
+        <div className='h-8 flex items-center justify-center text-red-700 min-h-[1.25rem] text-sm'>
+          {errors.price_min?.message || errors.price_max?.message}
+        </div>
+        <Button
+          type='submit'
+          className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'
+        >
+          Áp dụng
+        </Button>
+      </form>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
       <div className='capitalize mb-4'>Đánh giá</div>

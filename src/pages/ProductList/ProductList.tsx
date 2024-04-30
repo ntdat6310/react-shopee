@@ -25,8 +25,6 @@ export default function ProductList() {
     queryFn: categoryApi.getCategories
   })
 
-  console.log('dataCategories')
-
   return (
     <div className='bg-gray-200 py-6'>
       <div className='max-w-7xl mx-auto px-4 xl:px-10'>
