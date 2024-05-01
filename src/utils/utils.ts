@@ -16,10 +16,13 @@ export function formatNumberToSocialStyle(value: number) {
     maximumFractionDigits: 1
   })
     .format(value)
-    .replace('.', ',')
     .toLowerCase()
 }
 
 export function formatCurrency(currency: number) {
   return new Intl.NumberFormat('de-DE').format(currency)
+}
+
+export function calculateDiscountPercent({ origin, sale }: { origin: number; sale: number }): number {
+  return Math.round(((origin - sale) / origin) * 100)
 }

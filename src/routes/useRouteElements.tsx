@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute'
 import RejectedRoute from './RejectedRoute'
 import path from 'src/constants/path'
 import ProductList from 'src/pages/ProductList'
+import Product from 'src/pages/Product'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -63,6 +64,14 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: `${path.product}/:id`,
+      element: (
+        <MainLayout>
+          <Product />
         </MainLayout>
       )
     }

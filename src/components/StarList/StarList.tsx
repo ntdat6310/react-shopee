@@ -5,7 +5,7 @@ interface Props {
   numberOfStarsFilled?: number
   fill?: string
   className?: string
-  onClick: (star: number) => void
+  onClick?: (star: number) => void
 }
 
 export default function StarList({
@@ -19,7 +19,7 @@ export default function StarList({
     <button
       className={`flex items-center ${className}`}
       onClick={() => {
-        onClick(numberOfStarsFilled)
+        onClick && onClick(numberOfStarsFilled)
       }}
     >
       {Array(numberOfStars)

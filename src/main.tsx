@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import App from './App.tsx'
 import './index.css'
 import { AppProvider } from './contexts/app.context.tsx'
-
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <ToastContainer />
           <App />
         </AppProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>

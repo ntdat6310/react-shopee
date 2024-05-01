@@ -1,4 +1,8 @@
-export default function ArrowLeft() {
+interface Props {
+  className?: string
+}
+
+export default function ArrowLeft({ className = 'w-4 h-4' }: Props) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -6,7 +10,7 @@ export default function ArrowLeft() {
       viewBox='0 0 24 24'
       strokeWidth={1.5}
       stroke='currentColor'
-      className='w-4 h-4'
+      className={className}
     >
       <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
     </svg>
