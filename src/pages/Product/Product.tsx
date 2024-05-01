@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import InputNumber from 'src/components/InputNumber'
@@ -18,10 +18,10 @@ export default function Product() {
     },
     enabled: id !== undefined
   })
-  const product = productData?.data.data
-
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
+  const product = productData?.data.data
+  const imageRef = useRef<HTMLImageElement>(null)
 
   const currentImages = useMemo(() => {
     return (product && product.images?.slice(currentIndexImages[0], currentIndexImages[1])) ?? []
@@ -48,6 +48,30 @@ export default function Product() {
       setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
+  const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    // Cách 1 : Lấy offsetX, offsetY khi đã xử lý được bubble event
+    const { offsetX, offsetY } = event.nativeEvent
+
+    // Cách 2 : Lấy offsetX, offsetY khi không xử lý được bubble event
+    // const offsetX = event.pageX - (rect.x + window.scrollX)
+    // const offsetY = event.pageY - (rect.y + window.scrollY)
+
+    const image = imageRef.current as HTMLImageElement
+    const { naturalHeight, naturalWidth } = image
+    const top = offsetY * (1 - naturalHeight / rect.height)
+    const left = offsetX * (1 - naturalWidth / rect.width)
+
+    image.style.width = naturalWidth + 'px'
+    image.style.height = naturalHeight + 'px'
+    image.style.maxWidth = 'unset'
+    image.style.top = top + 'px'
+    image.style.left = left + 'px'
+  }
+
+  const resetZoom = () => {
+    imageRef.current?.removeAttribute('style')
+  }
 
   return (
     <div className='bg-gray-200 py-6'>
@@ -55,11 +79,16 @@ export default function Product() {
         <div className='max-w-7xl mx-auto px-4 xl:px-10 py-4'>
           <div className='grid grid-cols-12 md:gap-2 lg:gap-10'>
             <div className='col-span-12 lg:col-span-5'>
-              <div className='relative w-full pt-[100%] shadow'>
+              <div
+                className='relative w-full pt-[100%] shadow overflow-hidden hover:cursor-zoom-in'
+                onMouseMove={handleZoom}
+                onMouseLeave={resetZoom}
+              >
                 <img
                   src={activeImage}
                   alt='img_product'
-                  className='absolute top-0 left-0 h-full w-full bg-white object-cover rounded'
+                  className='absolute top-0 left-0 h-full w-full bg-white object-cover rounded pointer-events-none'
+                  ref={imageRef}
                 />
               </div>
               <div className='grid grid-cols-5 gap-[2px] md:gap-2 relative mt-4 rounded'>
