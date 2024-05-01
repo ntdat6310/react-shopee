@@ -7,10 +7,11 @@ import InputNumber from 'src/components/InputNumber'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
 import ArrowRight from 'src/components/Pagination/ArrowRight'
 import StarList from 'src/components/StarList'
-import { calculateDiscountPercent, formatCurrency, formatNumberToSocialStyle } from 'src/utils/utils'
+import { calculateDiscountPercent, formatCurrency, formatNumberToSocialStyle, getIdFromNameId } from 'src/utils/utils'
 
 export default function Product() {
-  const { id } = useParams()
+  const { nameId } = useParams()
+  const id = getIdFromNameId(nameId as string)
   const { data: productData } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {

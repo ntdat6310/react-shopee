@@ -26,3 +26,16 @@ export function formatCurrency(currency: number) {
 export function calculateDiscountPercent({ origin, sale }: { origin: number; sale: number }): number {
   return Math.round(((origin - sale) / origin) * 100)
 }
+
+export const removeSpecialCharacter = (str: string) =>
+  // eslint-disable-next-line no-useless-escape
+  str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, '')
+
+export const generateNameId = ({ name, id }: { name: string; id: string }) => {
+  return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i-${id}`
+}
+
+export const getIdFromNameId = (id: string) => {
+  const arr = id.split('-i-')
+  return arr[arr.length - 1]
+}

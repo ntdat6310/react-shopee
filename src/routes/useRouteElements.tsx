@@ -68,7 +68,7 @@ export default function useRouteElements() {
       )
     },
     {
-      path: `${path.product}/:id`,
+      path: `${path.product}/:nameId`,
       element: (
         <MainLayout>
           <Product />
