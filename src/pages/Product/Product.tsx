@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import InputNumber from 'src/components/InputNumber'
@@ -10,8 +11,6 @@ import { calculateDiscountPercent, formatCurrency, formatNumberToSocialStyle } f
 
 export default function Product() {
   const { id } = useParams()
-  console.log('id', id)
-
   const { data: productData } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
@@ -19,11 +18,35 @@ export default function Product() {
     },
     enabled: id !== undefined
   })
+  const product = productData?.data.data
 
-  console.log('productData', productData)
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
+  const [activeImage, setActiveImage] = useState('')
 
-  if (!productData) {
+  const currentImages = useMemo(() => {
+    return (product && product.images?.slice(currentIndexImages[0], currentIndexImages[1])) ?? []
+  }, [product, currentIndexImages])
+
+  useEffect(() => {
+    if (product && product.images && product.images.length > 0) {
+      setActiveImage(product.images[0])
+    }
+  }, [product])
+
+  if (!product) {
     return null
+  }
+
+  const onButtonRightClick = () => {
+    if (product.images && currentIndexImages[1] < product.images.length) {
+      setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
+    }
+  }
+
+  const onButtonLeftClick = () => {
+    if (currentIndexImages[0] > 0) {
+      setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
+    }
   }
 
   return (
@@ -34,26 +57,38 @@ export default function Product() {
             <div className='col-span-12 lg:col-span-5'>
               <div className='relative w-full pt-[100%] shadow'>
                 <img
-                  src={productData?.data.data.image}
+                  src={activeImage}
                   alt='img_product'
                   className='absolute top-0 left-0 h-full w-full bg-white object-cover rounded'
                 />
               </div>
               <div className='grid grid-cols-5 gap-[2px] md:gap-2 relative mt-4 rounded'>
-                <button className='absolute left-0 top-1/2 z-10 h-7 w-7 -translate-y-1/2 bg-black/50 rounded text-white'>
+                <button
+                  onClick={onButtonLeftClick}
+                  className='absolute left-0 top-1/2 z-10 h-7 w-7 -translate-y-1/2 bg-black/50 rounded text-white'
+                >
                   <div className='flex items-center justify-center h-full w-full'>
                     <ArrowLeft className='w-5 h-5' />
                   </div>
                 </button>
-                <button className='absolute right-0 top-1/2 z-10 h-7 w-7 -translate-y-1/2 bg-black/50 rounded text-white'>
+                <button
+                  onClick={onButtonRightClick}
+                  className='absolute right-0 top-1/2 z-10 h-7 w-7 -translate-y-1/2 bg-black/50 rounded text-white'
+                >
                   <div className='flex items-center justify-center h-full w-full'>
                     <ArrowRight className='w-5 h-5' />
                   </div>
                 </button>
-                {productData.data.data.images?.slice(0, 5).map((img) => {
-                  const isActive = true
+                {currentImages.map((img) => {
+                  const isActive = img === activeImage
                   return (
-                    <div className='col-span-1 relative w-full pt-[100%] shadow' key={img}>
+                    <div
+                      className='col-span-1 relative w-full pt-[100%] shadow'
+                      key={img}
+                      onMouseEnter={() => {
+                        setActiveImage(img)
+                      }}
+                    >
                       <img
                         src={img}
                         alt={productData.data.data.name}

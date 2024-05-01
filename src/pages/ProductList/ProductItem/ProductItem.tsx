@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import StarList from 'src/components/StarList'
+import path from 'src/constants/path'
 import { Product } from 'src/types/product.type'
 import { formatCurrency, formatNumberToSocialStyle } from 'src/utils/utils'
 
@@ -9,7 +10,7 @@ interface Props {
 
 export default function ProductItem({ product }: Props) {
   return (
-    <Link to={`/products/${product._id}`}>
+    <Link to={`${path.product}/${product._id}`}>
       <div className='bg-white shadow rounded-md hover:translate-y-[-2px] hover:shadow-md duration-100 transition-transform'>
         <div className='w-full pt-[100%] relative shadow-sm'>
           <img
