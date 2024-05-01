@@ -1,13 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import categoryApi from 'src/apis/category.api'
 import productApi from 'src/apis/product.api'
 import InputNumber from 'src/components/InputNumber'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
 import ArrowRight from 'src/components/Pagination/ArrowRight'
 import StarList from 'src/components/StarList'
-import { calculateDiscountPercent, formatCurrency, formatNumberToSocialStyle, getIdFromNameId } from 'src/utils/utils'
+import path from 'src/constants/path'
+import { ProductSortBy } from 'src/constants/product.enum'
+import { QueryConfig } from 'src/hooks/useQueryConfig'
+import { ProductConfig } from 'src/types/product.type'
+import {
+  calculateDiscountPercent,
+  formatCurrency,
+  formatNumberToSocialStyle,
+  generateNameId,
+  getIdFromNameId
+} from 'src/utils/utils'
 
 export default function Product() {
   const { nameId } = useParams()
@@ -33,6 +44,19 @@ export default function Product() {
       setActiveImage(product.images[0])
     }
   }, [product])
+
+  const topSoldProductsConfig: QueryConfig = {
+    limit: '20',
+    page: '1',
+    order: ProductSortBy.Sold,
+    category: product?.category?._id
+  }
+
+  const { data: topSoldProducts } = useQuery({
+    queryKey: ['categories', topSoldProductsConfig],
+    queryFn: () => productApi.getProducts(topSoldProductsConfig as ProductConfig),
+    staleTime: 3 * 60 * 1000
+  })
 
   if (!product) {
     return null
@@ -226,15 +250,51 @@ export default function Product() {
           </div>
         </div>
       </div>
-      <div className='bg-white m-4 shadow min-h-10 rounded'>
-        <div className='max-w-7xl mx-auto px-4 xl:px-10 py-4'>
-          <h2 className='text-xl font-semibold'>Mô tả sản phẩm</h2>
-          <div className='mt-4 leading-loose text-sm'>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(productData.data.data.description ?? '')
-              }}
-            ></div>
+
+      <div className='m-4 min-h-10 rounded'>
+        <div className='max-w-7xl mx-auto'>
+          <div className='grid grid-cols-12 gap-3 xl:gap-5'>
+            <div className='col-span-12 md:col-span-8 xl:col-span-9 bg-white p-4 lg:p-6 rounded'>
+              <h2 className='text-xl font-semibold'>Mô tả sản phẩm</h2>
+              <div className='mt-4 leading-loose text-sm'>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(productData.data.data.description ?? '')
+                  }}
+                ></div>
+              </div>
+            </div>
+            <div className='col-span-12 md:col-span-4 xl:col-span-3 bg-white p-4 lg:p-6 rounded'>
+              <h2 className='text-lg font-semibold text-gray-600 text-center'>Sản phẩm bán chạy</h2>
+              <div className='mt-4 flex flex-col gap-8'>
+                {topSoldProducts &&
+                  topSoldProducts.data.data?.products?.map((product, index) => {
+                    return (
+                      <Link
+                        to={`${path.product}/${generateNameId({
+                          name: product.name as string,
+                          id: product._id as string
+                        })}`}
+                        className='p-2 rounded border-2 border-transparent hover:border-gray-300'
+                        key={index}
+                      >
+                        <div className='relative w-full pt-[100%]'>
+                          <img
+                            src={product.image}
+                            alt='img_product'
+                            className='absolute top-0 left-0 h-full w-full bg-white object-cover rounded pointer-events-none'
+                          />
+                        </div>
+                        <div className='line-clamp-2 my-2'>{product.name}</div>
+                        <div className='text-red'>
+                          <span className='mr-1'>₫</span>
+                          {formatCurrency(product.price ?? 0)}
+                        </div>
+                      </Link>
+                    )
+                  })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
