@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import categoryApi from 'src/apis/category.api'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
-import InputNumber from 'src/components/InputNumber'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
 import ArrowRight from 'src/components/Pagination/ArrowRight'
+import QuantityController from 'src/components/QuantityController/QuantityController'
 import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
 import { ProductSortBy } from 'src/constants/product.enum'
@@ -21,6 +20,13 @@ import {
 } from 'src/utils/utils'
 
 export default function Product() {
+  const [buyCount, setBuyCount] = useState(1)
+
+  const location = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location])
+
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
   const { data: productData } = useQuery({
@@ -98,6 +104,9 @@ export default function Product() {
     imageRef.current?.removeAttribute('style')
   }
 
+  const handleCountChange = (value: number) => {
+    setBuyCount(value)
+  }
   return (
     <div className='bg-gray-200 py-6'>
       <div className='bg-white m-4 shadow min-h-10 rounded'>
@@ -191,37 +200,7 @@ export default function Product() {
                 })}% giảm`}</div>
               </div>
 
-              <div className='mt-6 flex items-center flex-wrap gap-5'>
-                <div className='capitalize text-gray-500'>Số lượng</div>
-                <div className='flex items-center'>
-                  <button className='flex items-center justify-center rounded-tl-md rounded-bl-md border-[1px] border-gray-300 h-8 w-8'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='w-4 h-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14' />
-                    </svg>
-                  </button>
-                  <InputNumber classNameInput='h-8 text-center w-12 outline-none border-[1px] border-gray-300 ' />
-                  <button className='flex items-center justify-center rounded-tr-md rounded-br-md border-[1px] border-gray-300 h-8 w-8'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth={1.5}
-                      stroke='currentColor'
-                      className='w-4 h-4'
-                    >
-                      <path strokeLinecap='round' strokeLinejoin='round' d='M5 12h14' />
-                    </svg>
-                  </button>
-                </div>
-                <div className='text-sm text-gray-500'>{productData.data.data.quantity} sản phẩm có sẵn</div>
-              </div>
+              <QuantityController max={productData.data.data.quantity} setValue={handleCountChange} value={buyCount} />
 
               <div className='mt-6 flex items-center flex-wrap gap-5'>
                 <button className='h-10 px-2 rounded flex items-center justify-center bg-red/10 border-[1px] border-red hover:bg-red/5 '>
