@@ -34,16 +34,20 @@ export default function ProductList() {
           </div>
           {dataProducts && (
             <div className='col-span-12 md:col-span-9'>
-              <SortProductList total_page={dataProducts.data.data?.pagination?.page_size ?? 1} />
-              <div className='mt-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
-                {dataProducts.data.data?.products?.map((product) => {
-                  return (
-                    <div className='col-span-1' key={product._id}>
-                      <ProductItem product={product} />
-                    </div>
-                  )
-                })}
-              </div>
+              <SortProductList total_page={dataProducts?.data.data?.pagination?.page_size ?? 1} />
+              {dataProducts.data.data?.products && dataProducts.data.data?.products.length == 0 ? (
+                <div className='my-10 text-xl text-center'>Không tìm thấy sản phẩm phù hợp</div>
+              ) : (
+                <div className='mt-6 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'>
+                  {dataProducts?.data.data?.products?.map((product) => {
+                    return (
+                      <div className='col-span-1' key={product._id}>
+                        <ProductItem product={product} />
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
               <Pagination
                 queryConfig={queryConfig}
                 totalPages={dataProducts?.data.data?.pagination?.page_size ?? 1}

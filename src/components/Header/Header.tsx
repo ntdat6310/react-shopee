@@ -1,13 +1,47 @@
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import LanguageDropdownMenu from '../LanguageDropdownMenu'
 import UserDropdownMenu from '../UserDropdownMenu'
 import ShoppingCart from '../ShoppingCart'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
-
+import { useForm } from 'react-hook-form'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { omit } from 'lodash'
+interface FormData {
+  search: string
+}
 export default function Header() {
   const { isAuthenticated } = useContext(AppContext)
+  const queryConfig = useQueryConfig()
+  const { register, handleSubmit, setValue } = useForm<FormData>({
+    defaultValues: {
+      search: queryConfig.name ?? ''
+    }
+  })
+
+  useEffect(() => {
+    setValue('search', queryConfig.name ?? '')
+  }, [queryConfig, setValue])
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const onSubmit = handleSubmit((onValid) => {
+    const name = onValid.search.trim()
+    if (name !== '') {
+      if (location.pathname === path.products) {
+        navigate({ pathname: path.products, search: createSearchParams({ ...queryConfig, name: name }).toString() })
+      } else {
+        navigate({ pathname: path.products, search: createSearchParams({ name: name }).toString() })
+      }
+    } else {
+      if (location.pathname === path.products) {
+        navigate({ pathname: path.products, search: createSearchParams(omit({ ...queryConfig }, ['name'])).toString() })
+      }
+    }
+  })
+
   return (
     <div className='pt-2 pb-4 bg-orange text-sm'>
       <div className='max-w-7xl mx-auto px-4'>
@@ -33,12 +67,13 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-10 lg:col-span-8'>
+          <form className='col-span-10 lg:col-span-8' onSubmit={onSubmit}>
             <div className='bg-white p-1 flex items-center rounded-md'>
               <input
                 type='text'
                 placeholder='Tìm kiếm sản phẩm'
                 className='text-black px-3 py-2 flex-grow border-none outline-none text-lg bg-transparent w-[80%] sm:w-auto'
+                {...register('search')}
               />
               <button className='bg-orange h-10 w-10 sm:w-14 flex justify-center items-center text-white rounded-md group hover:opacity-90'>
                 <svg

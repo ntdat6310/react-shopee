@@ -48,7 +48,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
   }
 
   const handleClearAllFilter = () => {
-    const newParams = omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])
+    const newParams = omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category', 'name'])
     navigate({
       pathname: path.products,
       search: createSearchParams({ ...newParams, page: '1' }).toString()
