@@ -6,10 +6,19 @@ import { formatCurrency, generateNameId } from 'src/utils/utils'
 
 interface Props {
   purchase: ExtendedPurchase
-  handleChecked: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleChecked?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleQuantityChange: (value: number) => void
+  handleTypeQuantity: (value: number) => void
+  handleOnBlue?: (value: number) => void
 }
 
-export default function CartItem({ purchase, handleChecked }: Props) {
+export default function CartItem({
+  purchase,
+  handleChecked,
+  handleQuantityChange,
+  handleTypeQuantity,
+  handleOnBlue
+}: Props) {
   return (
     <div className='grid grid-cols-12 shadow border-[1px] border-gray-200'>
       <div className='col-span-5 py-5'>
@@ -45,12 +54,20 @@ export default function CartItem({ purchase, handleChecked }: Props) {
           </div>
           <div className='col-span-3'>
             <div className='flex items-center justify-center h-full'>
-              <QuantityController value={0} setValue={() => null} />
+              <QuantityController
+                value={purchase.buy_count}
+                onIncrease={handleQuantityChange}
+                onDecrease={handleQuantityChange}
+                onType={handleTypeQuantity}
+                max={purchase.product.quantity}
+                disabled={purchase.disable}
+                onFocusOut={handleOnBlue}
+              />
             </div>
           </div>
           <div className='col-span-2'>
             <div className='flex items-center justify-center h-full text-orange'>
-              ₫{formatCurrency(purchase.product.price as number)}
+              ₫{formatCurrency((purchase.product.price as number) * purchase.buy_count)}
             </div>
           </div>
           <div className='col-span-2'>
