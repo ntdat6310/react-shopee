@@ -1,15 +1,20 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import productApi from 'src/apis/product.api'
+import purchaseApi from 'src/apis/purchase.api'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
 import ArrowRight from 'src/components/Pagination/ArrowRight'
 import QuantityController from 'src/components/QuantityController/QuantityController'
 import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
 import { ProductSortBy } from 'src/constants/product.enum'
+import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
+import { AppContext } from 'src/contexts/app.context'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
+import { queryClient } from 'src/main'
 import { ProductConfig } from 'src/types/product.type'
 import {
   calculateDiscountPercent,
@@ -18,14 +23,25 @@ import {
   generateNameId,
   getIdFromNameId
 } from 'src/utils/utils'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
 
 export default function Product() {
+  const { isAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const [buyCount, setBuyCount] = useState(1)
 
   const location = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
+    setBuyCount(1)
   }, [location])
+
+  const addToCartMutation = useMutation({
+    mutationFn: purchaseApi.addToCart
+  })
 
   const { nameId } = useParams()
   const id = getIdFromNameId(nameId as string)
@@ -79,6 +95,7 @@ export default function Product() {
       setCurrentIndexImages((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
+
   const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect()
     // Cách 1 : Lấy offsetX, offsetY khi đã xử lý được bubble event
@@ -107,6 +124,42 @@ export default function Product() {
   const handleCountChange = (value: number) => {
     setBuyCount(value)
   }
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      MySwal.fire({
+        text: 'Hãy đăng nhập để thêm vào giỏ hàng',
+        icon: 'warning',
+        confirmButtonText: 'Đăng nhập',
+        showCancelButton: true,
+        cancelButtonText: 'Hủy',
+        footer: `<span>Bạn chưa có tài khoản? <a href='/register' class='font-semibold text-blue-500 ml-2'>Đăng ký</a></span>`
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate({
+            pathname: path.login
+          })
+        }
+      })
+    } else {
+      addToCartMutation.mutate(
+        {
+          product_id: productData.data.data._id as string,
+          buy_count: buyCount
+        },
+        {
+          onSuccess(data) {
+            queryClient.invalidateQueries({ queryKey: ['purchases', PurchaseStatus.inCart] })
+            MySwal.fire({
+              text: data.data.message,
+              icon: 'success'
+            })
+          }
+        }
+      )
+    }
+  }
+
   return (
     <div className='bg-gray-200 py-6'>
       <div className='bg-white m-4 shadow min-h-10 rounded'>
@@ -203,7 +256,10 @@ export default function Product() {
               <QuantityController max={productData.data.data.quantity} setValue={handleCountChange} value={buyCount} />
 
               <div className='mt-6 flex items-center flex-wrap gap-5'>
-                <button className='h-10 px-2 rounded flex items-center justify-center bg-red/10 border-[1px] border-red hover:bg-red/5 '>
+                <button
+                  className='h-10 px-2 rounded flex items-center justify-center bg-red/10 border-[1px] border-red hover:bg-red/5 '
+                  onClick={handleAddToCart}
+                >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'

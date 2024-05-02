@@ -6,6 +6,8 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
+import { queryClient } from 'src/main'
+import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 
 export default function UserDropdownMenu() {
   const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
@@ -15,13 +17,11 @@ export default function UserDropdownMenu() {
     mutationFn: logout,
     onSuccess(data) {
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['purchases', PurchaseStatus.inCart] })
       toast.success(data.data.message, {
         autoClose: 500
       })
-      setTimeout(() => {
-        // window.location.reload()
-        setIsAuthenticated(false)
-      }, 800)
+      setIsAuthenticated(false)
     }
   })
 

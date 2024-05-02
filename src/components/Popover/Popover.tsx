@@ -11,7 +11,8 @@ import {
   useHover,
   useInteractions
 } from '@floating-ui/react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 interface Props {
   children: React.ReactNode
@@ -23,6 +24,15 @@ interface Props {
 export default function Popover({ children, renderPopover, placement = 'bottom-end', childrenClasses = '' }: Props) {
   const arrowRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
+
+  const location = useLocation()
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpen(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
