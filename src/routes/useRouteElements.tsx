@@ -11,6 +11,7 @@ import RejectedRoute from './RejectedRoute'
 import path from 'src/constants/path'
 import ProductList from 'src/pages/ProductList'
 import Product from 'src/pages/Product'
+import Cart from 'src/pages/Cart'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -24,10 +25,18 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: 'profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
+            </MainLayout>
+          )
+        },
+        {
+          path: path.cart,
+          element: (
+            <MainLayout>
+              <Cart />
             </MainLayout>
           )
         }

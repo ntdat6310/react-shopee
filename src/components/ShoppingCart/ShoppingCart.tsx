@@ -58,9 +58,12 @@ export default function ShoppingCart({ classNames = '' }: Props) {
               })}
               <div className='flex flex-wrap items-center justify-center lg:justify-between mt-4 gap-2'>
                 <span className='text-gray-400 pl-4'>Có {inCartPurchasesData.length} sản phẩm trong giỏ hàng</span>
-                <button className='py-2 px-4 w-full lg:w-auto text-center bg-orange hover:bg-opacity-90 transition-all text-white capitalize'>
+                <Link
+                  to={path.cart}
+                  className='py-2 px-4 w-full lg:w-auto text-center bg-orange hover:bg-opacity-90 transition-all text-white capitalize'
+                >
                   Xem giỏ hàng
-                </button>
+                </Link>
               </div>
             </>
           ) : (

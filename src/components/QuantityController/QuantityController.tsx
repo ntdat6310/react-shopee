@@ -8,7 +8,13 @@ interface Props extends InputNumberProps {
   setValue: (value: number) => void
 }
 
-export default function QuantityController({ max, value, setValue, classNameWrapper = 'mt-6 gap-5', ...rest }: Props) {
+export default function QuantityController({
+  max,
+  value,
+  setValue,
+  classNameWrapper = 'flex items-center flex-wrap',
+  ...rest
+}: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let _value = Number(event.target.value)
     if (max !== undefined && _value > max) {
@@ -36,8 +42,7 @@ export default function QuantityController({ max, value, setValue, classNameWrap
   }
 
   return (
-    <div className={'flex items-center flex-wrap ' + classNameWrapper}>
-      <div className='capitalize text-gray-500'>Số lượng</div>
+    <div className={classNameWrapper}>
       <div className='flex items-center'>
         <button
           className='flex items-center justify-center rounded-tl-md rounded-bl-md border-[1px] border-gray-300 h-8 w-8'
@@ -76,7 +81,6 @@ export default function QuantityController({ max, value, setValue, classNameWrap
           </svg>
         </button>
       </div>
-      <div className='text-sm text-gray-500'>{max} sản phẩm có sẵn</div>
     </div>
   )
 }

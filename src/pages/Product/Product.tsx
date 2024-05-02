@@ -253,7 +253,15 @@ export default function Product() {
                 })}% giảm`}</div>
               </div>
 
-              <QuantityController max={productData.data.data.quantity} setValue={handleCountChange} value={buyCount} />
+              <div className={'flex items-center flex-wrap mt-6 gap-5'}>
+                <div className='capitalize text-gray-500'>Số lượng</div>
+                <QuantityController
+                  max={productData.data.data.quantity}
+                  setValue={handleCountChange}
+                  value={buyCount}
+                />
+                <div className='text-sm text-gray-500'>{productData.data.data.quantity} sản phẩm có sẵn</div>
+              </div>
 
               <div className='mt-6 flex items-center flex-wrap gap-5'>
                 <button

@@ -26,7 +26,7 @@ const purchaseApi = {
   },
 
   deletePurchases(purchaseIds: string[]) {
-    return http.delete<SuccessResponse<{ message: string; data: { delete_count: number } }>>(`${URL}`, {
+    return http.delete<SuccessResponse<{ delete_count: number }>>(`${URL}`, {
       data: purchaseIds
     })
   }
