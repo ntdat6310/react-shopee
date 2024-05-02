@@ -42,7 +42,9 @@ export default function CartItem() {
           </div>
           <div className='col-span-2'>
             <div className='flex items-center justify-center h-full'>
-              <button className=' text-orange/80 p-3 hover:text-orange'>Xóa</button>
+              <button className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'>
+                Xóa
+              </button>
             </div>
           </div>
         </div>

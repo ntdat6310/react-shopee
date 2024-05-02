@@ -38,14 +38,23 @@ export default function Cart() {
               <input type='checkbox' className='h-5 w-5 accent-orange' />
             </div>
             <div className='capitalize'>Chọn tất cả (2)</div>
-            <button className='capitalize py-1 px-2 bg-orange rounded text-white'>Xóa</button>
+            <button className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'>
+              Xóa
+            </button>
           </div>
-          <div className='flex flex-col justify-start items-start md:flex-row md:items-center mt-3 lg:mt-0'>
-            <div className='flex items-center gap-1 sm:ml-4 lg:ml-0'>
-              <div className='text-xs sm:text-sm'>Tổng thanh toán (2 sản phẩm):</div>
-              <div className='text-base sm:text-xl text-orange'>₫166.000</div>
+          <div className='flex flex-col justify-start items-start lg:flex-row lg:items-center mt-3 lg:mt-0'>
+            <div className='flex flex-col items-start lg:items-end gap-1 sm:ml-4 lg:ml-0'>
+              <div className=''>
+                <span className='text-xs sm:text-sm'>Tổng thanh toán (2 sản phẩm):</span>
+                <span className='text-base sm:text-xl text-orange'>₫166.000</span>
+              </div>
+              <div className='text-xs'>
+                <span className='mr-2'>Tiết kiệm</span>
+                <span>₫166.000</span>
+              </div>
             </div>
-            <button className='mt-3 md:mt-0 sm:ml-4 capitalize py-2 px-6  lg:px-10 bg-orange rounded text-white'>
+
+            <button className='mt-3 lg:mt-0 sm:ml-4 capitalize py-2 lg:py-3 px-6  lg:px-10 bg-orange rounded text-white lg:text-base'>
               Mua hàng
             </button>
           </div>
