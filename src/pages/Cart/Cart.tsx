@@ -5,6 +5,7 @@ import purchaseApi from 'src/apis/purchase.api'
 import { Purchase } from 'src/types/purchase.type'
 import { useEffect, useState } from 'react'
 import { keyBy } from 'lodash'
+import { formatCurrency } from 'src/utils/utils'
 
 export interface ExtendedPurchase extends Purchase {
   checked: boolean
@@ -81,6 +82,17 @@ export default function Cart() {
     }
   }
 
+  const checkedPurchases = extendedPurchases.filter((purchase) => purchase.checked)
+
+  const totalCheckedPurchasesPrice = checkedPurchases.reduce((result, current) => {
+    return (result += current.buy_count * (current.product.price as number))
+  }, 0)
+
+  const totalCheckedPurchasesSavingPrice = checkedPurchases.reduce((result, current) => {
+    return (result +=
+      current.buy_count * (Number(current.product.price_before_discount) - Number(current.product.price)))
+  }, 0)
+
   return (
     <div className='bg-gray-300 py-16'>
       <div className='max-w-7xl mx-auto px-4 xl:px-10'>
@@ -144,12 +156,12 @@ export default function Cart() {
           <div className='flex flex-col justify-start items-start lg:flex-row lg:items-center mt-3 lg:mt-0'>
             <div className='flex flex-col items-start lg:items-end gap-1 sm:ml-4 lg:ml-0'>
               <div className=''>
-                <span className='text-xs sm:text-sm'>Tổng thanh toán (2 sản phẩm):</span>
-                <span className='text-base sm:text-xl text-orange'>₫166.000</span>
+                <span className='text-xs sm:text-sm'>{`Tổng thanh toán (${checkedPurchases.length} sản phẩm)`}</span>
+                <span className='text-base sm:text-xl text-orange ml-1'>{`₫${formatCurrency(totalCheckedPurchasesPrice)}`}</span>
               </div>
               <div className='text-xs'>
                 <span className='mr-2'>Tiết kiệm</span>
-                <span>₫166.000</span>
+                <span>{`₫${formatCurrency(totalCheckedPurchasesSavingPrice)}`}</span>
               </div>
             </div>
 
