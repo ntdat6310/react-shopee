@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import productApi from 'src/apis/product.api'
 import purchaseApi from 'src/apis/purchase.api'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
@@ -257,7 +256,9 @@ export default function Product() {
                 <div className='capitalize text-gray-500'>Số lượng</div>
                 <QuantityController
                   max={productData.data.data.quantity}
-                  setValue={handleCountChange}
+                  onIncrease={handleCountChange}
+                  onDecrease={handleCountChange}
+                  onType={handleCountChange}
                   value={buyCount}
                 />
                 <div className='text-sm text-gray-500'>{productData.data.data.quantity} sản phẩm có sẵn</div>

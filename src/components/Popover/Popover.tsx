@@ -56,7 +56,7 @@ export default function Popover({ children, renderPopover, placement = 'bottom-e
 
       {isOpen && (
         <FloatingPortal>
-          <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
+          <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()} className='z-50'>
             {renderPopover}
             <FloatingArrow ref={arrowRef} context={context} width={30} height={15} fill='white' />
           </div>
