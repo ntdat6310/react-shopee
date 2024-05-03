@@ -4,7 +4,6 @@ import RegisterHeader from 'src/components/RegisterHeader'
 import MainLayout from 'src/layouts/MainLayout'
 import RegisterLayout from 'src/layouts/RegisterLayout'
 import Login from 'src/pages/Login'
-import Profile from 'src/pages/Profile'
 import Register from 'src/pages/Register'
 import ProtectedRoute from './ProtectedRoute'
 import RejectedRoute from './RejectedRoute'
@@ -12,6 +11,10 @@ import path from 'src/constants/path'
 import ProductList from 'src/pages/ProductList'
 import Product from 'src/pages/Product'
 import Cart from 'src/pages/Cart'
+import UserLayout from 'src/pages/User/layouts/UserLayout'
+import ChangePassword from 'src/pages/User/pages/ChangePassword'
+import HistoryPurchase from 'src/pages/User/pages/HistoryPurchase'
+import Profile from 'src/pages/User/pages/Profile'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -25,20 +28,34 @@ export default function useRouteElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
           path: path.cart,
           element: (
             <MainLayout>
               <Cart />
             </MainLayout>
           )
+        },
+        {
+          path: path.user,
+          element: (
+            <MainLayout>
+              <UserLayout />
+            </MainLayout>
+          ),
+          children: [
+            {
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.changePassword,
+              element: <ChangePassword />
+            },
+            {
+              path: path.historyPurchase,
+              element: <HistoryPurchase />
+            }
+          ]
         }
       ]
     },
