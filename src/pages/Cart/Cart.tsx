@@ -19,7 +19,11 @@ const MySwal = withReactContent(Swal)
 
 export default function Cart() {
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
-  const { data: purchases, refetch } = useQuery({
+  const {
+    data: purchases,
+    refetch,
+    isLoading
+  } = useQuery({
     queryKey: ['purchases', PurchaseStatus.inCart],
     queryFn: () => purchaseApi.getPurchases({ status: PurchaseStatus.inCart })
   })
@@ -43,6 +47,13 @@ export default function Cart() {
 
   const deletePurchaseMutation = useMutation({
     mutationFn: purchaseApi.deletePurchases,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const buyPurchaseMutation = useMutation({
+    mutationFn: purchaseApi.buyPurchases,
     onSuccess: () => {
       refetch()
     }
@@ -125,6 +136,26 @@ export default function Cart() {
     }
   }
 
+  const buyPurchases = () => {
+    if (checkedPurchases.length > 0) {
+      buyPurchaseMutation.mutate(
+        checkedPurchases.map((item) => ({
+          product_id: item.product._id as string,
+          buy_count: item.buy_count
+        })),
+        {
+          onSuccess(data) {
+            MySwal.fire({
+              icon: 'success',
+              text: data.data.message,
+              timer: 2000
+            })
+          }
+        }
+      )
+    }
+  }
+
   return (
     <div className='bg-gray-300 py-16'>
       <div className='max-w-7xl mx-auto px-4 xl:px-10'>
@@ -201,7 +232,10 @@ export default function Cart() {
               </div>
             </div>
 
-            <button className='mt-3 lg:mt-0 sm:ml-4 capitalize py-2 lg:py-3 px-6  lg:px-10 bg-orange rounded text-white lg:text-base'>
+            <button
+              onClick={buyPurchases}
+              className='mt-3 lg:mt-0 sm:ml-4 capitalize py-2 lg:py-3 px-6  lg:px-10 bg-orange rounded text-white lg:text-base'
+            >
               Mua hàng
             </button>
           </div>
