@@ -1,4 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 import CartItem from './CartItem'
 import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 import purchaseApi from 'src/apis/purchase.api'
@@ -11,6 +14,8 @@ export interface ExtendedPurchase extends Purchase {
   checked: boolean
   disable: boolean
 }
+
+const MySwal = withReactContent(Swal)
 
 export default function Cart() {
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
@@ -29,8 +34,15 @@ export default function Cart() {
     }
   }, [purchases])
 
-  const purchaseMutation = useMutation({
+  const updatePurchaseMutation = useMutation({
     mutationFn: purchaseApi.updateCart,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const deletePurchaseMutation = useMutation({
+    mutationFn: purchaseApi.deletePurchases,
     onSuccess: () => {
       refetch()
     }
@@ -61,7 +73,7 @@ export default function Cart() {
 
   const handleOnBlue = (purchaseIndex: number) => (value: number) => {
     if (value !== purchases?.data.data[purchaseIndex].buy_count) {
-      purchaseMutation.mutate({
+      updatePurchaseMutation.mutate({
         buy_count: value,
         product_id: extendedPurchases[purchaseIndex].product._id as string
       })
@@ -75,7 +87,7 @@ export default function Cart() {
         newPurchases[purchaseIndex] = { ...newPurchases[purchaseIndex], buy_count: value, disable: true }
         return newPurchases
       })
-      purchaseMutation.mutate({
+      updatePurchaseMutation.mutate({
         buy_count: value,
         product_id: extendedPurchases[purchaseIndex].product._id as string
       })
@@ -92,6 +104,26 @@ export default function Cart() {
     return (result +=
       current.buy_count * (Number(current.product.price_before_discount) - Number(current.product.price)))
   }, 0)
+
+  const handleDeletePurchase = (purchaseIndex: number) => () => {
+    deletePurchaseMutation.mutate([extendedPurchases[purchaseIndex]._id])
+  }
+
+  const handleDeleteManyPurchases = () => {
+    if (checkedPurchases.length > 0) {
+      MySwal.fire({
+        icon: 'warning',
+        title: `Bạn muốn xóa ${checkedPurchases.length} sản phẩm`,
+        showCancelButton: true,
+        showCloseButton: true,
+        confirmButtonText: 'Xóa'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deletePurchaseMutation.mutate(checkedPurchases.map((item) => item._id))
+        }
+      })
+    }
+  }
 
   return (
     <div className='bg-gray-300 py-16'>
@@ -132,6 +164,7 @@ export default function Cart() {
                     handleQuantityChange={(value) => handleQuantityChange(index, value)}
                     handleTypeQuantity={handleTypeQuantity(index)}
                     handleOnBlue={handleOnBlue(index)}
+                    onDelete={handleDeletePurchase(index)}
                   />
                 )
               })}
@@ -149,7 +182,10 @@ export default function Cart() {
               />
             </div>
             <div className='capitalize'>Chọn tất cả ({extendedPurchases.length})</div>
-            <button className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'>
+            <button
+              onClick={handleDeleteManyPurchases}
+              className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'
+            >
               Xóa
             </button>
           </div>

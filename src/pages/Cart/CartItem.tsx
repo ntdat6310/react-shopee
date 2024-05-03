@@ -10,6 +10,7 @@ interface Props {
   handleQuantityChange: (value: number) => void
   handleTypeQuantity: (value: number) => void
   handleOnBlue?: (value: number) => void
+  onDelete?: () => void
 }
 
 export default function CartItem({
@@ -17,7 +18,8 @@ export default function CartItem({
   handleChecked,
   handleQuantityChange,
   handleTypeQuantity,
-  handleOnBlue
+  handleOnBlue,
+  onDelete
 }: Props) {
   return (
     <div className='grid grid-cols-12 shadow border-[1px] border-gray-200'>
@@ -72,7 +74,10 @@ export default function CartItem({
           </div>
           <div className='col-span-2'>
             <div className='flex items-center justify-center h-full'>
-              <button className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'>
+              <button
+                onClick={onDelete}
+                className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'
+              >
                 Xóa
               </button>
             </div>
