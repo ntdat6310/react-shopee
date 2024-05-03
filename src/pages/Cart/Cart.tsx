@@ -6,7 +6,7 @@ import CartItem from './CartItem'
 import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 import purchaseApi from 'src/apis/purchase.api'
 import { Purchase } from 'src/types/purchase.type'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { keyBy } from 'lodash'
 import { formatCurrency } from 'src/utils/utils'
 import Spinner from 'src/components/Spinner'
@@ -86,7 +86,8 @@ export default function Cart() {
     })
   }
 
-  const isCheckedAll = extendedPurchases.every((item) => item.checked)
+  const isCheckedAll = useMemo(() => extendedPurchases.every((item) => item.checked), [extendedPurchases])
+
   const handleCheckedAll = () => {
     setExtendedPurchases((prev) => {
       return prev.map((item) => ({ ...item, checked: !isCheckedAll }))
@@ -124,16 +125,22 @@ export default function Cart() {
     }
   }
 
-  const checkedPurchases = extendedPurchases.filter((purchase) => purchase.checked)
+  const checkedPurchases = useMemo(() => extendedPurchases.filter((purchase) => purchase.checked), [extendedPurchases])
 
-  const totalCheckedPurchasesPrice = checkedPurchases.reduce((result, current) => {
-    return (result += current.buy_count * (current.product.price as number))
-  }, 0)
+  const totalCheckedPurchasesPrice = useMemo(
+    () =>
+      checkedPurchases.reduce((result, current) => {
+        return (result += current.buy_count * (current.product.price as number))
+      }, 0),
+    [checkedPurchases]
+  )
 
-  const totalCheckedPurchasesSavingPrice = checkedPurchases.reduce((result, current) => {
-    return (result +=
-      current.buy_count * (Number(current.product.price_before_discount) - Number(current.product.price)))
-  }, 0)
+  const totalCheckedPurchasesSavingPrice = useMemo(() => {
+    return checkedPurchases.reduce((result, current) => {
+      return (result +=
+        current.buy_count * (Number(current.product.price_before_discount) - Number(current.product.price)))
+    }, 0)
+  }, [checkedPurchases])
 
   const handleDeletePurchase = (purchaseIndex: number) => () => {
     deletePurchaseMutation.mutate([extendedPurchases[purchaseIndex]._id])
