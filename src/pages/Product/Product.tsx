@@ -124,22 +124,25 @@ export default function Product() {
     setBuyCount(value)
   }
 
+  const handleUnauthenticated = () => {
+    MySwal.fire({
+      text: 'Hãy đăng nhập để thêm vào giỏ hàng',
+      icon: 'warning',
+      confirmButtonText: 'Đăng nhập',
+      showCancelButton: true,
+      cancelButtonText: 'Hủy',
+      footer: `<span>Bạn chưa có tài khoản? <a href='/register' class='font-semibold text-blue-500 ml-2'>Đăng ký</a></span>`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate({
+          pathname: path.login
+        })
+      }
+    })
+  }
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      MySwal.fire({
-        text: 'Hãy đăng nhập để thêm vào giỏ hàng',
-        icon: 'warning',
-        confirmButtonText: 'Đăng nhập',
-        showCancelButton: true,
-        cancelButtonText: 'Hủy',
-        footer: `<span>Bạn chưa có tài khoản? <a href='/register' class='font-semibold text-blue-500 ml-2'>Đăng ký</a></span>`
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate({
-            pathname: path.login
-          })
-        }
-      })
+      handleUnauthenticated()
     } else {
       addToCartMutation.mutate(
         {
@@ -153,6 +156,34 @@ export default function Product() {
               text: data.data.message,
               icon: 'success'
             })
+          }
+        }
+      )
+    }
+  }
+
+  const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      handleUnauthenticated()
+    } else {
+      addToCartMutation.mutate(
+        {
+          product_id: productData.data.data._id as string,
+          buy_count: buyCount
+        },
+        {
+          onSuccess() {
+            queryClient.invalidateQueries({ queryKey: ['purchases', PurchaseStatus.inCart] })
+            navigate(
+              {
+                pathname: path.cart
+              },
+              {
+                state: {
+                  productId: productData.data.data._id
+                }
+              }
+            )
           }
         }
       )
@@ -286,7 +317,10 @@ export default function Product() {
                   <span className='capitalize text-red text-xs'>Thêm vào giỏ hàng</span>
                 </button>
 
-                <button className='h-10 px-10 capitalize bg-red text-white rounded text-xs hover:bg-red/80'>
+                <button
+                  onClick={handleBuyNow}
+                  className='h-10 px-10 capitalize bg-red text-white rounded text-xs hover:bg-red/80'
+                >
                   Mua ngay
                 </button>
               </div>
