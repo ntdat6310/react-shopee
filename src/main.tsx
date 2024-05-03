@@ -9,10 +9,16 @@ import './index.css'
 import { AppProvider } from './contexts/app.context.tsx'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 // Create a client
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      retry: 1,
+      /** If response is error because unauthorize => Call api to refresh token.
+       * If refresh token successfully => Set new access_token to local storage then tell Tanstack Query to recall api after 1 second
+       * If refresh token failed => refresh_token is expired => Logout, clear local storage and clear global state
+       */
+      retryDelay: 1000
     }
   }
 })

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -13,7 +13,6 @@ import { ProductSortBy } from 'src/constants/product.enum'
 import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 import { AppContext } from 'src/contexts/app.context'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
-import { queryClient } from 'src/main'
 import { ProductConfig } from 'src/types/product.type'
 import {
   calculateDiscountPercent,
@@ -28,6 +27,7 @@ import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 
 export default function Product() {
+  const queryClient = useQueryClient()
   const { isAuthenticated } = useContext(AppContext)
   const navigate = useNavigate()
   const [buyCount, setBuyCount] = useState(1)

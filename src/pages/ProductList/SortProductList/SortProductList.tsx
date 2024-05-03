@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { omit } from 'lodash'
-import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
 import ArrowRight from 'src/components/Pagination/ArrowRight'

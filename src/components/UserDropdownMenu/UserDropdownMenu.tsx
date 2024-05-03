@@ -1,17 +1,16 @@
-import { useMutation } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
-import { logout } from 'src/apis/auth.api'
-import Popover from '../Popover'
-import { toast } from 'react-toastify'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
-import { AppContext } from 'src/contexts/app.context'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { logout } from 'src/apis/auth.api'
 import path from 'src/constants/path'
-import { queryClient } from 'src/main'
 import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
+import { AppContext } from 'src/contexts/app.context'
+import Popover from '../Popover'
 
 export default function UserDropdownMenu() {
   const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
-
+  const queryClient = useQueryClient()
   const logoutMutation = useMutation({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: logout,

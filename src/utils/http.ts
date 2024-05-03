@@ -3,18 +3,22 @@ import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum'
 import path from 'src/constants/path'
 import { AuthResponse } from 'src/types/auth.type'
+import { SuccessResponse } from 'src/types/utils.type'
 import {
-  clearAccessTokenFromLocalStorage,
-  clearProfileFromLocalStorage,
+  clearLS,
   getAccessTokenFromLocalStorage,
+  getRefreshTokenFromLocalStorage,
   setAccessTokenToLocalStorage,
-  setProfileToLocalStorage
+  setProfileToLocalStorage,
+  setRefreshTokenToLocalStorage
 } from './auth'
 class Http {
   instance: AxiosInstance
   private accessToken: string
+  private isRefreshedAccessToken: boolean
   constructor() {
     this.accessToken = getAccessTokenFromLocalStorage()
+    this.isRefreshedAccessToken = false
     this.instance = axios.create({
       baseURL: 'https://api-ecom.duthanhduoc.com/',
       timeout: 10000,
@@ -32,7 +36,7 @@ class Http {
         }
         return config
       },
-      function (error) {
+      (error) => {
         return Promise.reject(error)
       }
     )
@@ -42,17 +46,25 @@ class Http {
         const { url } = response.config
         if (url === path.login) {
           const data = response.data as AuthResponse
-          const access_token = data.data.access_token
-          this.setAccessToken(access_token)
           setProfileToLocalStorage(data.data.user)
+          const access_token = data.data.access_token
+          const refresh_token = data.data.refresh_token
+          this.setAccessToken(access_token)
+          this.setRefreshToken(refresh_token)
         } else if (url === path.logout) {
-          this.clearAccessToken()
-          clearProfileFromLocalStorage()
+          clearLS()
         }
         return response
       },
-      function (error: AxiosError) {
-        if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
+      (error: AxiosError) => {
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          if (!this.isRefreshedAccessToken) {
+            this.refreshAccessToken()
+            this.isRefreshedAccessToken = true
+          } else {
+            clearLS()
+          }
+        } else if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
           const message = data.message || error.message
@@ -63,14 +75,24 @@ class Http {
     )
   }
 
-  private clearAccessToken = () => {
-    this.accessToken = ''
-    clearAccessTokenFromLocalStorage()
-  }
-
   private setAccessToken = (access_token: string) => {
     this.accessToken = access_token
     setAccessTokenToLocalStorage(access_token)
+  }
+
+  private setRefreshToken = (refresh_token: string) => {
+    setRefreshTokenToLocalStorage(refresh_token)
+  }
+
+  private refreshAccessToken = () => {
+    const refresh_token = getRefreshTokenFromLocalStorage()
+    this.instance
+      .post<SuccessResponse<{ access_token: string }>>('/refresh-access-token', {
+        refresh_token: refresh_token
+      })
+      .then((data) => {
+        this.setAccessToken(data.data.data.access_token)
+      })
   }
 }
 
