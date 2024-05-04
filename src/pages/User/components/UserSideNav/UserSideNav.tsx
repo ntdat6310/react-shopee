@@ -1,21 +1,23 @@
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import path, { apiPath } from 'src/constants/path'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
+import { getAvatarUrl } from 'src/utils/utils'
 
 export default function UserSideNav() {
   const { profile } = useContext(AppContext)
-  console.log(`${apiPath.avatar}/${profile?.avatar}`)
   return (
     <div className=''>
       <div className='flex items-center py-2 border-b border-b-gray-200'>
         <Link to={path.profile} className='rounded-full w-11 h-11 flex-shrink-0 overflow-hidden'>
-          <img src={`${apiPath.avatar}/${profile?.avatar}`} alt='user_profile' className='rounded-full object-cover' />
+          <img
+            src={getAvatarUrl(profile?.avatar)}
+            alt='user_profile'
+            className='rounded-full object-cover w-full h-full'
+          />
         </Link>
         <div className='flex flex-col pl-2 flex-grow'>
-          <div className='truncate max-w-32 md:max-w-24 font-semibold text-black'>
-            changkho610310changkho6310changkho6310changkho6310changkho63
-          </div>
+          <div className='truncate max-w-32 md:max-w-24 font-semibold text-black'>{profile?.name}</div>
           <div className='capitalize flex items-center py-1 gap-1'>
             <svg
               xmlns='http://www.w3.org/2000/svg'

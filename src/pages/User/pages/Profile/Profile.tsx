@@ -1,24 +1,44 @@
+/* eslint-disable no-empty */
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import Input from 'src/components/Input'
-import InputNumber from 'src/components/InputNumber'
-import { apiPath } from 'src/constants/path'
-import { AppContext } from 'src/contexts/app.context'
-import { UserSchema, userSchema } from 'src/utils/rules'
-import DateSelect from '../../components/DateSelect'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
 import { useMutation } from '@tanstack/react-query'
 import userApi, { BodyUpdateProfile } from 'src/apis/user.api'
+import Input from 'src/components/Input'
+import InputNumber from 'src/components/InputNumber'
+import { AppContext } from 'src/contexts/app.context'
 import { setProfileToLocalStorage } from 'src/utils/auth'
+import { UserSchema, userSchema } from 'src/utils/rules'
+import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import DateSelect from '../../components/DateSelect'
+import { isUndefined, omitBy } from 'lodash'
+import { ErrorResponse } from 'src/types/utils.type'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'date_of_birth' | 'phone'>
 const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'date_of_birth', 'phone'])
 
+type FormDataError = Omit<FormData, 'date_of_birth'> & {
+  date_of_birth: string
+}
+const MySwal = withReactContent(Swal)
+
 export default function Profile() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { profile, setProfile } = useContext(AppContext)
+  const [file, setFile] = useState<File>()
+  const previewAvatar = useMemo(() => {
+    return file && URL.createObjectURL(file)
+  }, [file])
 
   const profileMutation = useMutation({
     mutationFn: userApi.updateProfile
+  })
+
+  const uploadAvatarMutation = useMutation({
+    mutationFn: userApi.updateAvatar
   })
 
   const {
@@ -26,11 +46,11 @@ export default function Profile() {
     control,
     formState: { errors },
     handleSubmit,
-    setValue
+    setValue,
+    setError
   } = useForm<FormData>({
     resolver: yupResolver(profileSchema)
   })
-
   useEffect(() => {
     setValue('address', profile?.address)
     setValue('avatar', profile?.avatar)
@@ -39,21 +59,62 @@ export default function Profile() {
     setValue('phone', profile?.phone)
   }, [profile, setValue])
 
-  const onSubmit = handleSubmit((dataOnValid) => {
-    console.log('dataOnValid', dataOnValid)
-    profileMutation.mutate(dataOnValid as BodyUpdateProfile, {
-      onSuccess(data) {
-        setProfile(data.data.data)
-        setProfileToLocalStorage(data.data.data)
+  const onSubmit = handleSubmit(async (dataOnValid) => {
+    let newAvatarName
+    try {
+      if (file) {
+        const form = new FormData()
+        form.append('image', file)
+        const uploadResponse = await uploadAvatarMutation.mutateAsync(form)
+        newAvatarName = uploadResponse.data.data
       }
-    })
+
+      const updateProfileResponse = await profileMutation.mutateAsync(
+        omitBy(
+          {
+            ...dataOnValid,
+            date_of_birth: dataOnValid.date_of_birth?.toISOString(),
+            avatar: newAvatarName ?? dataOnValid.avatar
+          },
+          isUndefined
+        ) as BodyUpdateProfile
+      )
+
+      MySwal.fire({
+        icon: 'success',
+        text: updateProfileResponse.data.message,
+        timer: 2000
+      })
+
+      setProfile(updateProfileResponse.data.data)
+      setProfileToLocalStorage(updateProfileResponse.data.data)
+    } catch (error) {
+      if (isAxiosUnprocessableEntityError<ErrorResponse<FormDataError>>(error)) {
+        const formError = error.response?.data.data
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormData, {
+              type: 'server',
+              message: formError[key as keyof FormData]
+            })
+          })
+        }
+      }
+    }
   })
-  console.log('re-render profile')
 
   const handleDateChange = (value: Date) => {
     setValue('date_of_birth', value)
   }
 
+  const onAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileFromLocal = event.target.files?.[0]
+    setFile(fileFromLocal)
+  }
+
+  const onClickButtonSelectAvatar = () => {
+    fileInputRef.current?.click()
+  }
   return (
     <div className='bg-white rounded-md py-4 px-6'>
       <h1 className='capitalize text-lg font-semibold text-black'>Hồ sơ của tôi</h1>
@@ -141,14 +202,21 @@ export default function Profile() {
             <div className='flex flex-col items-center gap-3'>
               <div className='h-32 w-32 rounded-full flex items-center'>
                 <img
-                  src={`${apiPath.avatar}/${profile?.avatar}`}
+                  src={previewAvatar || getAvatarUrl(profile?.avatar)}
                   alt='user_profile'
                   className='rounded-full object-cover w-full h-full'
                 />
               </div>
-              <input type='text' className='hidden' />
+              <input
+                type='file'
+                className='hidden'
+                ref={fileInputRef}
+                accept='.ipg,.jpeg,.png'
+                onChange={onAvatarChange}
+              />
               <button
                 type='button'
+                onClick={onClickButtonSelectAvatar}
                 className='py-2 px-3 capitalize border border-gray-400 rounded-md hover:bg-gray-100'
               >
                 Chọn ảnh

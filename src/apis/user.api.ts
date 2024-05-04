@@ -3,6 +3,10 @@ import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
 export interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {}
+export interface ChangePassword {
+  password: string
+  new_password: string
+}
 
 const userApi = {
   getProfile() {
@@ -10,6 +14,10 @@ const userApi = {
   },
 
   updateProfile(body: BodyUpdateProfile) {
+    return http.put<SuccessResponse<User>>('/user', body)
+  },
+
+  changePassword(body: ChangePassword) {
     return http.put<SuccessResponse<User>>('/user', body)
   },
 

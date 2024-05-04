@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/constants/httpStatusCode.enum'
-import path from 'src/constants/path'
+import path, { config } from 'src/constants/path'
 import { AuthResponse } from 'src/types/auth.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import {
@@ -20,7 +20,7 @@ class Http {
     this.accessToken = getAccessTokenFromLocalStorage()
     this.isRefreshedAccessToken = false
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: config.baseUrl,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ class Http {
         } else if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
-          const message = data.message || error.message
+          const message = data?.message || error?.message
           toast.error(message)
         }
         return Promise.reject(error)
