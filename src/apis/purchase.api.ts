@@ -1,4 +1,4 @@
-import { Purchase, PurchaseStatus } from 'src/types/purchase.type'
+import { Purchase, PurchaseListStatus, PurchaseStatus } from 'src/types/purchase.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 
@@ -9,7 +9,7 @@ const purchaseApi = {
     return http.post<SuccessResponse<null>>(`${URL}/add-to-cart`, body)
   },
 
-  getPurchases(params: { status: PurchaseStatus }) {
+  getPurchases(params: { status: PurchaseListStatus }) {
     return http.get<SuccessResponse<Purchase[]>>(URL, {
       params: {
         status: params.status

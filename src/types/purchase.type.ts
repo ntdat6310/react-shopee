@@ -7,4 +7,6 @@ export interface Purchase {
   buy_count: number
   status: PurchaseStatus
   product: Product
+  createdAt: string
+  updatedAt: string
 }
