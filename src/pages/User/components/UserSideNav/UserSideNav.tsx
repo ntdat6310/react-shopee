@@ -1,16 +1,16 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import path from 'src/constants/path'
+import path, { apiPath } from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function UserSideNav() {
+  const { profile } = useContext(AppContext)
+  console.log(`${apiPath.avatar}/${profile?.avatar}`)
   return (
     <div className=''>
       <div className='flex items-center py-2 border-b border-b-gray-200'>
         <Link to={path.profile} className='rounded-full w-11 h-11 flex-shrink-0 overflow-hidden'>
-          <img
-            src='https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg'
-            alt='user_profile'
-            className='rounded-full object-cover'
-          />
+          <img src={`${apiPath.avatar}/${profile?.avatar}`} alt='user_profile' className='rounded-full object-cover' />
         </Link>
         <div className='flex flex-col pl-2 flex-grow'>
           <div className='truncate max-w-32 md:max-w-24 font-semibold text-black'>

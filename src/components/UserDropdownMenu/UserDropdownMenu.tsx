@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { logout } from 'src/apis/auth.api'
-import path from 'src/constants/path'
+import path, { apiPath } from 'src/constants/path'
 import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 import { AppContext } from 'src/contexts/app.context'
 import Popover from '../Popover'
@@ -45,7 +45,7 @@ export default function UserDropdownMenu() {
       <div className='ml-5 flex items-center text-white hover:text-gray-300 cursor-pointer'>
         <div className='w-7 h-7 flex-shrink-0'>
           <img
-            src='https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg'
+            src={`${apiPath.avatar}/${profile?.avatar}`}
             alt='avatar'
             className='w-full h-full rounded-full object-cover'
           />

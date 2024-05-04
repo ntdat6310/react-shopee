@@ -13,4 +13,8 @@ const path = {
   user: '/user'
 }
 
+export const apiPath = {
+  avatar: `https://api-ecom.duthanhduoc.com/images`
+}
+
 export default path

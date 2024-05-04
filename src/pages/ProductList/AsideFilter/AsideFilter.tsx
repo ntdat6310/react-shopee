@@ -17,8 +17,8 @@ interface Props {
 }
 
 type FormData = Pick<Schema, 'price_max' | 'price_min'>
-
 const priceSchema = schema.pick(['price_min', 'price_max'])
+
 export default function AsideFilter({ categories, queryConfig }: Props) {
   const {
     control,
@@ -155,6 +155,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                     trigger() // Validate all input fields
                   }}
                   value={field.value}
+                  isErrorPossible={false}
                 />
               )
             }}
@@ -174,12 +175,14 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                     trigger() // Validate all input fields
                   }}
                   value={field.value}
+                  isErrorPossible={false}
                 />
               )
             }}
           />
         </div>
-        <div className='h-8 flex items-center justify-center text-red-700 min-h-[1.25rem] text-sm'>
+        <div className='h-8 flex items-center justify-center text-red min-h-[1.25rem] text-sm'>
+          {' '}
           {errors.price_min?.message || errors.price_max?.message}
         </div>
         <Button
@@ -213,38 +216,6 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
               </div>
             )
           })}
-
-        {/* <div className='flex gap-2 text-sm'>
-          <StarList
-            onClick={handleClickStarList}
-            numberOfStarsFilled={4}
-            className='cursor-pointer hover:opacity-50 gap-1'
-          />
-        </div>
-        <div className='flex gap-2 text-sm'>
-          <StarList
-            onClick={handleClickStarList}
-            numberOfStarsFilled={3}
-            className='cursor-pointer hover:opacity-50 gap-1'
-          />
-          Trở lên
-        </div>
-        <div className='flex gap-2 text-sm'>
-          <StarList
-            onClick={handleClickStarList}
-            numberOfStarsFilled={2}
-            className='cursor-pointer hover:opacity-50 gap-1'
-          />
-          Trở lên
-        </div>
-        <div className='flex gap-2 text-sm'>
-          <StarList
-            onClick={handleClickStarList}
-            numberOfStarsFilled={1}
-            className='cursor-pointer hover:opacity-50 gap-1'
-          />
-          Trở lên
-        </div> */}
       </div>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
