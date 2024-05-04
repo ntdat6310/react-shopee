@@ -80,6 +80,7 @@ export default function QuantityController({
           value={value}
           disabled={disabled}
           onBlur={handleBlur}
+          isErrorPossible={false}
           {...rest}
         />
         <button
