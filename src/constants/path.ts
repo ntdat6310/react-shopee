@@ -14,7 +14,8 @@ const path = {
 }
 
 export const config = {
-  baseUrl: `https://api-ecom.duthanhduoc.com/`
+  baseUrl: `https://api-ecom.duthanhduoc.com/`,
+  maxSizeAvatarUpload: 1000000
 }
 
 export default path

@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -6,16 +5,18 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 import { useMutation } from '@tanstack/react-query'
+import { isUndefined, omitBy } from 'lodash'
 import userApi, { BodyUpdateProfile } from 'src/apis/user.api'
 import Input from 'src/components/Input'
 import InputNumber from 'src/components/InputNumber'
 import { AppContext } from 'src/contexts/app.context'
+import { ErrorResponse } from 'src/types/utils.type'
 import { setProfileToLocalStorage } from 'src/utils/auth'
 import { UserSchema, userSchema } from 'src/utils/rules'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import DateSelect from '../../components/DateSelect'
-import { isUndefined, omitBy } from 'lodash'
-import { ErrorResponse } from 'src/types/utils.type'
+import { config } from 'src/constants/path'
+import { toast } from 'react-toastify'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'date_of_birth' | 'phone'>
 const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'date_of_birth', 'phone'])
@@ -109,7 +110,15 @@ export default function Profile() {
 
   const onAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileFromLocal = event.target.files?.[0]
-    setFile(fileFromLocal)
+    console.log(fileFromLocal)
+    if (
+      fileFromLocal?.size &&
+      (fileFromLocal?.size >= config.maxSizeAvatarUpload || !fileFromLocal.type.includes('images/'))
+    ) {
+      toast.error('File ảnh phải có dung lương tối đa 1MB')
+    } else {
+      setFile(fileFromLocal)
+    }
   }
 
   const onClickButtonSelectAvatar = () => {

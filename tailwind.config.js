@@ -8,6 +8,5 @@ export default {
         red: '#d0011b'
       }
     }
-  },
-  plugins: [require('@tailwindcss/line-clamp')]
+  }
 }
