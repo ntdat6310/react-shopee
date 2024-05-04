@@ -182,7 +182,6 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           />
         </div>
         <div className='h-8 flex items-center justify-center text-red min-h-[1.25rem] text-sm'>
-          {' '}
           {errors.price_min?.message || errors.price_max?.message}
         </div>
         <Button

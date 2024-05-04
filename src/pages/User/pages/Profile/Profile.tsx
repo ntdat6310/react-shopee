@@ -6,12 +6,20 @@ import InputNumber from 'src/components/InputNumber'
 import { apiPath } from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { UserSchema, userSchema } from 'src/utils/rules'
+import DateSelect from '../../components/DateSelect'
+import { useMutation } from '@tanstack/react-query'
+import userApi, { BodyUpdateProfile } from 'src/apis/user.api'
+import { setProfileToLocalStorage } from 'src/utils/auth'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'date_of_birth' | 'phone'>
 const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'date_of_birth', 'phone'])
 
 export default function Profile() {
   const { profile, setProfile } = useContext(AppContext)
+
+  const profileMutation = useMutation({
+    mutationFn: userApi.updateProfile
+  })
 
   const {
     register,
@@ -31,15 +39,20 @@ export default function Profile() {
     setValue('phone', profile?.phone)
   }, [profile, setValue])
 
-  const onSubmit = handleSubmit(
-    (dataOnValid) => {
-      console.log('dataOnValid', dataOnValid)
-    },
-    (onDataInvalid) => {
-      console.log('onDataInvalid', onDataInvalid)
-      console.log('errors', errors)
-    }
-  )
+  const onSubmit = handleSubmit((dataOnValid) => {
+    console.log('dataOnValid', dataOnValid)
+    profileMutation.mutate(dataOnValid as BodyUpdateProfile, {
+      onSuccess(data) {
+        setProfile(data.data.data)
+        setProfileToLocalStorage(data.data.data)
+      }
+    })
+  })
+  console.log('re-render profile')
+
+  const handleDateChange = (value: Date) => {
+    setValue('date_of_birth', value)
+  }
 
   return (
     <div className='bg-white rounded-md py-4 px-6'>
@@ -77,10 +90,8 @@ export default function Profile() {
                   render={({ field }) => {
                     return (
                       <InputNumber
-                        value={field.value}
-                        onChange={(event) => {
-                          field.onChange(event)
-                        }}
+                        value={field.value ?? ''}
+                        onChange={field.onChange}
                         placeholder='Nhập số điện thoại'
                         isErrorPossible={true}
                         errorMessage={errors.phone?.message}
@@ -109,29 +120,20 @@ export default function Profile() {
             <div className='mt-2 grid grid-cols-12 items-start gap-2'>
               <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>Ngày sinh</div>
               <div className='col-span-12 sm:col-span-8'>
-                <div className='grid grid-cols-3 gap-2'>
-                  <select
-                    name=''
-                    id=''
-                    className='col-span-1 py-2 border border-gray-400 rounded-md text-center outline-none focus:border-black'
-                  >
-                    <option value=''>Ngày</option>
-                  </select>
-                  <select
-                    name=''
-                    id=''
-                    className='col-span-1 py-2 border border-gray-400 rounded-md text-center outline-none focus:border-black'
-                  >
-                    <option value=''>Tháng</option>
-                  </select>
-                  <select
-                    name=''
-                    id=''
-                    className='col-span-1 py-2 border border-gray-400 rounded-md text-center outline-none focus:border-black'
-                  >
-                    <option value=''>Năm</option>
-                  </select>
-                </div>
+                <Controller
+                  control={control}
+                  name='date_of_birth'
+                  render={({ field }) => {
+                    return (
+                      <DateSelect
+                        value={field.value}
+                        onChange={handleDateChange}
+                        isErrorPossible={true}
+                        errorMessage={errors.date_of_birth?.message}
+                      />
+                    )
+                  }}
+                />
               </div>
             </div>
           </div>
