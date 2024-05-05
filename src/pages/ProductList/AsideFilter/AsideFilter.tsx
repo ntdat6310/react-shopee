@@ -83,7 +83,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='w-5 h-5'
+          className='w-5 h-5 hidden lg:block'
         >
           <path
             strokeLinecap='round'
@@ -127,7 +127,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           viewBox='0 0 24 24'
           strokeWidth={1.5}
           stroke='currentColor'
-          className='w-5 h-5'
+          className='w-5 h-5 hidden lg:block'
         >
           <path
             strokeLinecap='round'

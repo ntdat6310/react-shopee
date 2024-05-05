@@ -30,8 +30,8 @@ export default function HistoryPurchase() {
         status: status as PurchaseListStatus
       })
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000
+    staleTime: 0,
+    gcTime: 0
   })
 
   console.log(purchases)

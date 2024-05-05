@@ -16,7 +16,7 @@ export default function ProductItem({ product }: Props) {
         id: product._id as string
       })}`}
     >
-      <div className='bg-white shadow rounded-md hover:translate-y-[-2px] hover:shadow-md duration-100 transition-transform'>
+      <div className='bg-white shadow rounded-md hover:translate-y-[-2px] hover:shadow-md duration-100 transition-transform h-full'>
         <div className='w-full pt-[100%] relative shadow-sm'>
           <img
             src={product.image}
@@ -27,7 +27,7 @@ export default function ProductItem({ product }: Props) {
         <div className='p-2 min-h-[3.5rem] overflow-hidden'>
           <div className='line-clamp-2'>{product.name}</div>
         </div>
-        <div className='flex items-center justify-start px-2 pb-2 gap-2'>
+        <div className='flex items-center flex-wrap justify-start px-2 pb-2 gap-2'>
           <div className='text-gray-500'>
             <span className='text-xs mr-[2px] underline'>đ</span>
             <span className='line-through'>{product.price_before_discount}</span>

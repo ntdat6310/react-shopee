@@ -111,9 +111,11 @@ export default function Profile() {
   const onAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileFromLocal = event.target.files?.[0]
     console.log(fileFromLocal)
+    console.log(fileFromLocal?.size && fileFromLocal?.size >= config.maxSizeAvatarUpload)
+    console.log(fileFromLocal?.size && !fileFromLocal.type.includes('image/'))
     if (
       fileFromLocal?.size &&
-      (fileFromLocal?.size >= config.maxSizeAvatarUpload || !fileFromLocal.type.includes('images/'))
+      (fileFromLocal?.size >= config.maxSizeAvatarUpload || !fileFromLocal.type.includes('image/'))
     ) {
       toast.error('File ảnh phải có dung lương tối đa 1MB')
     } else {

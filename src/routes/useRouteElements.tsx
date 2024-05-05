@@ -15,13 +15,18 @@ import UserLayout from 'src/pages/User/layouts/UserLayout'
 import ChangePassword from 'src/pages/User/pages/ChangePassword'
 import HistoryPurchase from 'src/pages/User/pages/HistoryPurchase'
 import Profile from 'src/pages/User/pages/Profile'
+import NotFound from 'src/pages/NotFound'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: path.home,
       index: true,
-      element: <MainLayout />
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
     },
     {
       path: '',
@@ -100,6 +105,10 @@ export default function useRouteElements() {
           <Product />
         </MainLayout>
       )
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
   return routeElements

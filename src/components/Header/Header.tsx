@@ -44,7 +44,7 @@ export default function Header() {
 
   return (
     <div className='pt-2 pb-4 bg-orange text-sm'>
-      <div className='max-w-7xl mx-auto px-4'>
+      <div className='max-w-7xl mx-auto px-2 sm:px-4'>
         <div className='flex justify-end'>
           <LanguageDropdownMenu />
           {!isAuthenticated && (
