@@ -36,7 +36,9 @@ export default function UserDropdownMenu() {
           <Link to={path.profile}>
             <div className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>Tài khoản của tôi</div>
           </Link>
-          <button className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>Đơn mua</button>
+          <Link to={path.historyPurchase} className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>
+            Đơn mua
+          </Link>
           <button className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all' onClick={handleLogout}>
             Đăng xuất
           </button>
