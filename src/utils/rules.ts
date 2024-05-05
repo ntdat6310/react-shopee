@@ -45,9 +45,21 @@ export const userSchema = yup.object({
   address: yup.string().max(160, 'Địa chỉ không được vượt quá 160 kí tự'),
   avatar: yup.string().max(1000, 'Avatar không được vượt quá 1000 kí tự'),
   date_of_birth: yup.date().max(new Date(), 'Bạn sinh ra ở tương lai à?'),
-  password: registerSchema.fields['password'],
-  new_password: registerSchema.fields['password'],
-  confirm_password: registerSchema.fields['confirm_password']
+  password: yup
+    .string()
+    .required('Password là bắt buộc')
+    .min(6, 'Độ dài phải từ 6-160 kí tự')
+    .max(160, 'Độ dài phải từ 6-160 kí tự'),
+  new_password: yup
+    .string()
+    .required('Password là bắt buộc')
+    .min(6, 'Độ dài phải từ 6-160 kí tự')
+    .max(160, 'Độ dài phải từ 6-160 kí tự')
+    .notOneOf([yup.ref('password')], 'Mật khẩu mới phải khác mật khẩu cũ'),
+  confirm_password: yup
+    .string()
+    .required('Password là bắt buộc')
+    .oneOf([yup.ref('new_password')], 'Mật khẩu không khớp')
 })
 export type UserSchema = yup.InferType<typeof userSchema>
 export type Schema = yup.InferType<typeof priceSchema>
