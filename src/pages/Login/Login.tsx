@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,24 +11,23 @@ import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/utils.type'
-import { getRules } from 'src/utils/rules'
+import { RegisterSchema, registerSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-interface FormData {
-  email: string
-  password: string
-}
+
+type FormData = Omit<RegisterSchema, 'confirm_password'>
+const loginSchema = registerSchema.omit(['confirm_password'])
+
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const {
     register,
     handleSubmit,
-    getValues,
     setError,
     reset,
     formState: { errors }
-  } = useForm<FormData>()
-
-  const rules = getRules(getValues)
+  } = useForm<FormData>({
+    resolver: yupResolver(loginSchema)
+  })
 
   const loginMutation = useMutation({
     mutationFn: (body: FormData) => login(body)
@@ -65,14 +65,13 @@ export default function Login() {
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-16 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
+            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit} noValidate>
               <div className='text-xl lg:text-2xl'>Đăng nhập</div>
               <Input
                 name='email'
                 type='email'
                 placeholder='Email'
                 register={register}
-                rules={rules.email}
                 errorMessage={errors.email?.message}
                 className='mt-8'
               />
@@ -81,7 +80,6 @@ export default function Login() {
                 type='password'
                 placeholder='Password'
                 register={register}
-                rules={rules.password}
                 errorMessage={errors.password?.message}
                 className='mt-2'
               />

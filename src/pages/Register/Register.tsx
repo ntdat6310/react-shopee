@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import _ from 'lodash'
 import { useForm } from 'react-hook-form'
@@ -9,28 +10,22 @@ import Button from 'src/components/Button/Button'
 import Input from 'src/components/Input'
 import path from 'src/constants/path'
 import { ErrorResponse } from 'src/types/utils.type'
-import { getRules } from 'src/utils/rules'
+import { RegisterSchema, registerSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
-interface FormData {
-  email: string
-  password: string
-  confirm_password: string
-}
 export default function Register() {
   const {
     register,
     handleSubmit,
-    getValues,
     setError,
     reset,
     formState: { errors }
-  } = useForm<FormData>()
-
-  const rules = getRules(getValues)
+  } = useForm<RegisterSchema>({
+    resolver: yupResolver(registerSchema)
+  })
 
   const registerUserMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<RegisterSchema, 'confirm_password'>) => registerAccount(body)
   })
 
   const navigate = useNavigate()
@@ -47,13 +42,13 @@ export default function Register() {
         }, 1000)
       },
       onError(error) {
-        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<RegisterSchema, 'confirm_password'>>>(error)) {
           const formError = error.response?.data.data
           if (formError) {
             Object.keys(formError).forEach((key) => {
-              setError(key as keyof Omit<FormData, 'confirm_password'>, {
+              setError(key as keyof Omit<RegisterSchema, 'confirm_password'>, {
                 type: 'server',
-                message: formError[key as keyof Omit<FormData, 'confirm_password'>]
+                message: formError[key as keyof Omit<RegisterSchema, 'confirm_password'>]
               })
             })
           }
@@ -67,14 +62,13 @@ export default function Register() {
       <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-16 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit}>
+            <form action='' className='p-6 md:p-10 bg-white shadow-sm rounded-md' onSubmit={onSubmit} noValidate>
               <div className='text-xl lg:text-2xl'>Đăng ký</div>
               <Input
                 name='email'
                 type='email'
                 placeholder='Email'
                 register={register}
-                rules={rules.email}
                 errorMessage={errors.email?.message}
                 className='mt-8'
               />
@@ -83,7 +77,6 @@ export default function Register() {
                 type='password'
                 placeholder='Password'
                 register={register}
-                rules={rules.password}
                 errorMessage={errors.password?.message}
                 className='mt-2'
               />
@@ -92,7 +85,6 @@ export default function Register() {
                 type='password'
                 placeholder='Confirm password'
                 register={register}
-                rules={rules.confirm_password}
                 errorMessage={errors.confirm_password?.message}
                 className='mt-2'
               />

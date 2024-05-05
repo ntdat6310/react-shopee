@@ -10,14 +10,14 @@ import StarList from 'src/components/StarList'
 import path from 'src/constants/path'
 import { QueryConfig } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
-import { Schema, schema } from 'src/utils/rules'
+import { Schema, priceSchema } from 'src/utils/rules'
 interface Props {
   categories: Category[]
   queryConfig: QueryConfig
 }
 
 type FormData = Pick<Schema, 'price_max' | 'price_min'>
-const priceSchema = schema.pick(['price_min', 'price_max'])
+const schema = priceSchema.pick(['price_min', 'price_max'])
 
 export default function AsideFilter({ categories, queryConfig }: Props) {
   const {
@@ -31,7 +31,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
       price_min: queryConfig.price_min ?? '',
       price_max: queryConfig.price_max ?? ''
     },
-    resolver: yupResolver(priceSchema)
+    resolver: yupResolver(schema)
   })
   const navigate = useNavigate()
 
