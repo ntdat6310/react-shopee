@@ -9,6 +9,7 @@ import { UserSchema, userSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import ShowPassword from '../../components/ShowPassword'
 import HidePassword from '../../components/HidePassword'
+import { useTranslation } from 'react-i18next'
 
 const schema = userSchema.pick(['password', 'confirm_password', 'new_password'])
 type FormData = Pick<UserSchema, 'password' | 'new_password' | 'confirm_password'>
@@ -19,6 +20,8 @@ interface ShowHidePassword {
 }
 
 export default function ChangePassword() {
+  const { t } = useTranslation('user')
+
   const [isShow, setIsShow] = useState<ShowHidePassword>({
     password: false,
     new_password: false,
@@ -44,7 +47,7 @@ export default function ChangePassword() {
       { password: dataOnValid.password, new_password: dataOnValid.new_password },
       {
         onSuccess() {
-          toast.success('Đổi mật khẩu thành công', { autoClose: 1000 })
+          toast.success(t('change-password.password-changed-successfully'), { autoClose: 1000 })
           reset()
         },
         onError(error) {
@@ -72,15 +75,14 @@ export default function ChangePassword() {
       })
     }
 
-  console.log(isShow)
   return (
     <div className='mt-4 py-8 px-4 sm:px-8 min-h-[400px] bg-white rounded-md text-gray-500'>
-      <h1 className='text-black text-xl capitalize'>Đổi mật khẩu</h1>
-      <p className='mt-2'>Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
+      <h1 className='text-black text-xl capitalize'>{t('change-password.change-password')}</h1>
+      <p className='mt-2'>{t('change-password.change-password-description')}</p>
       <div className='bg-gray-200 h-[1px] mt-4 mb-6'></div>
       <form className='flex flex-col' onSubmit={onSubmit}>
         <div className='grid grid-cols-12 gap-2 mt-1'>
-          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>Mật khẩu</div>
+          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>{t('change-password.password')}</div>
           <div className='col-span-12 sm:col-span-9 lg:col-span-8 2xl:col-span-6'>
             <div className='border-gray-300 border rounded-md flex'>
               <input
@@ -88,7 +90,7 @@ export default function ChangePassword() {
                 name='password'
                 type={isShow.password ? 'text' : 'password'}
                 className='py-2 pl-3 flex-grow outline-none rounded-md'
-                placeholder='Mật khẩu'
+                placeholder={t('change-password.change-password')}
               />
               <button type='button' className='px-3' onClick={handleIsShow('password')}>
                 {isShow.password ? <HidePassword /> : <ShowPassword />}
@@ -99,7 +101,7 @@ export default function ChangePassword() {
         </div>
 
         <div className='grid grid-cols-12 gap-2 mt-1'>
-          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>Mật khẩu mới</div>
+          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>{t('change-password.new-password')}</div>
           <div className='col-span-12 sm:col-span-9 lg:col-span-8 2xl:col-span-6'>
             <div className='border-gray-300 border rounded-md flex'>
               <input
@@ -107,7 +109,7 @@ export default function ChangePassword() {
                 name='new_password'
                 type={isShow.new_password ? 'text' : 'password'}
                 className='py-2 pl-3 flex-grow outline-none rounded-md'
-                placeholder='Mật khẩu mới'
+                placeholder={t('change-password.new-password')}
               />
               <button type='button' className='px-3' onClick={handleIsShow('new_password')}>
                 {isShow.new_password ? <HidePassword /> : <ShowPassword />}
@@ -118,14 +120,16 @@ export default function ChangePassword() {
         </div>
 
         <div className='grid grid-cols-12 gap-2 mt-1'>
-          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>Nhập lại</div>
+          <div className='col-span-12 sm:col-span-3 flex mt-2 sm:justify-end'>
+            {t('change-password.confirm-password')}
+          </div>
           <div className='col-span-12 sm:col-span-9 lg:col-span-8 2xl:col-span-6'>
             <div className='border-gray-300 border rounded-md flex'>
               <input
                 {...register('confirm_password')}
                 type={isShow.confirm_password ? 'text' : 'password'}
                 className='py-2 pl-3 flex-grow outline-none rounded-md'
-                placeholder='Nhập lại'
+                placeholder={t('change-password.confirm-password')}
               />
               <button type='button' className='px-3' onClick={handleIsShow('confirm_password')}>
                 {isShow.confirm_password ? <HidePassword /> : <ShowPassword />}
@@ -140,7 +144,7 @@ export default function ChangePassword() {
             type='submit'
             className='mt-2 py-2 col-span-12 sm:col-span-3 sm:col-start-4 rounded-md bg-orange text-white'
           >
-            Submit
+            {t('change-password.submit')}
           </button>
         </div>
       </form>

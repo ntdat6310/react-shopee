@@ -10,6 +10,8 @@ import { AppProvider } from './contexts/app.context.tsx'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
 import ServerError from './components/ServerError/ServerError.tsx'
+import './i18n/i18n.ts'
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {

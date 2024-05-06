@@ -9,17 +9,20 @@ import useQueryParams from 'src/hooks/useQueryParams'
 import { PurchaseListStatus } from 'src/types/purchase.type'
 import NoPurchase from '../../components/NoPurchase'
 import { formatCurrency, getDateString } from 'src/utils/utils'
-
-const purchaseTabs = [
-  { status: PurchaseStatus.all, name: 'Tất cả' },
-  { status: PurchaseStatus.waitForConfirmation, name: 'Chờ xác nhận' },
-  { status: PurchaseStatus.waitForGetting, name: 'Chờ lấy hàng' },
-  { status: PurchaseStatus.inProgress, name: 'Đang giao' },
-  { status: PurchaseStatus.delivered, name: 'Đã giao' },
-  { status: PurchaseStatus.cancelled, name: 'Đã hủy' }
-]
+import { useTranslation } from 'react-i18next'
 
 export default function HistoryPurchase() {
+  const { t } = useTranslation('user')
+
+  const purchaseTabs = [
+    { status: PurchaseStatus.all, name: t('purchases.all') },
+    { status: PurchaseStatus.waitForConfirmation, name: t('purchases.wait-for-confirmation') },
+    { status: PurchaseStatus.waitForGetting, name: t('purchases.wait-for-getting') },
+    { status: PurchaseStatus.inProgress, name: t('purchases.delivering') },
+    { status: PurchaseStatus.delivered, name: t('purchases.delivered') },
+    { status: PurchaseStatus.cancelled, name: t('purchases.cancelled') }
+  ]
+
   const queryParams = useQueryParams()
   const status = Number.isNaN(Number(queryParams?.status)) ? PurchaseStatus.all : Number(queryParams?.status)
 
@@ -33,8 +36,6 @@ export default function HistoryPurchase() {
     staleTime: 0,
     gcTime: 0
   })
-
-  console.log(purchases)
 
   const purchaseTabsLink = purchaseTabs.map((purchaseTab, index) => {
     return (

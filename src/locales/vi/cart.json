@@ -1,0 +1,14 @@
+{
+  "product": "Sản Phẩm",
+  "unit-price": "Đơn Giá",
+  "quantity": "Số Lượng",
+  "total-amount": "Số Tiền",
+  "action": "Thao Tác",
+  "select-all": "Chọn Tất Cả ({{count}})",
+  "delete": "Xóa",
+  "total-payment": "Tổng thanh toán ({{count}} sản phẩm)",
+  "save": "Tiết kiệm",
+  "buy-now": "Mua Hàng",
+  "confirm-delete": "Bạn muốn xóa {{count}} sản phẩm",
+  "cancel": "Hủy"
+}

@@ -1,0 +1,12 @@
+{
+  "items-in-cart": "Có {{count}} sản phẩm trong giỏ hàng",
+  "search-product": "Tìm kiếm sản phẩm",
+  "order": "Đơn mua",
+  "profile": "Tài khoản của tôi",
+  "no-product-in-cart": "Không Có Sản Phẩm Trong Giỏ Hàng",
+  "log-in": "Đăng nhập",
+  "register": "Đăng ký",
+  "log-out": "Đăng xuất",
+  "view-cart": "Xem giỏ hàng",
+  "newly-added-products": "Sản phẩm mới thêm"
+}

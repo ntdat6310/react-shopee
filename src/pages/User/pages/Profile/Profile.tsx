@@ -17,6 +17,7 @@ import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import DateSelect from '../../components/DateSelect'
 import { config } from 'src/constants/path'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'avatar' | 'date_of_birth' | 'phone'>
 const profileSchema = userSchema.pick(['name', 'address', 'avatar', 'date_of_birth', 'phone'])
@@ -27,6 +28,7 @@ type FormDataError = Omit<FormData, 'date_of_birth'> & {
 const MySwal = withReactContent(Swal)
 
 export default function Profile() {
+  const { t } = useTranslation('user')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { profile, setProfile } = useContext(AppContext)
   const [file, setFile] = useState<File>()
@@ -110,14 +112,11 @@ export default function Profile() {
 
   const onAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileFromLocal = event.target.files?.[0]
-    console.log(fileFromLocal)
-    console.log(fileFromLocal?.size && fileFromLocal?.size >= config.maxSizeAvatarUpload)
-    console.log(fileFromLocal?.size && !fileFromLocal.type.includes('image/'))
     if (
       fileFromLocal?.size &&
       (fileFromLocal?.size >= config.maxSizeAvatarUpload || !fileFromLocal.type.includes('image/'))
     ) {
-      toast.error('File ảnh phải có dung lương tối đa 1MB')
+      toast.error(t('my-profile.image-file-must-be-max-1MB'))
     } else {
       setFile(fileFromLocal)
     }
@@ -128,8 +127,8 @@ export default function Profile() {
   }
   return (
     <div className='bg-white rounded-md py-4 px-6'>
-      <h1 className='capitalize text-lg font-semibold text-black'>Hồ sơ của tôi</h1>
-      <div className='mt-2'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
+      <h1 className='capitalize text-lg font-semibold text-black'>{t('my-profile.my-profile')}</h1>
+      <div className='mt-2'>{t('my-profile.my-profile-description')}</div>
       <div className='my-4 h-[1px] w-full bg-gray-200'></div>
       <form action='' onSubmit={onSubmit}>
         <div className='grid grid-cols-12 gap-4'>
@@ -140,21 +139,25 @@ export default function Profile() {
             </div>
 
             <div className='mt-6 grid grid-cols-12 items-start gap-2'>
-              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>Họ Tên</div>
+              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>
+                {t('my-profile.name')}
+              </div>
               <div className='col-span-12 sm:col-span-8'>
                 <Input
                   name='name'
                   register={register}
                   isErrorPossible={true}
                   errorMessage={errors.name?.message}
-                  placeholder='Nhập họ tên'
+                  placeholder={t('my-profile.enter-name')}
                   classNameInput='outline-none border border-gray-400 py-2 px-2 w-full rounded-md focus:border-black'
                 />
               </div>
             </div>
 
             <div className='mt-2 grid grid-cols-12 items-start gap-2'>
-              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>Số điện thoại</div>
+              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>
+                {t('my-profile.phone')}
+              </div>
               <div className='col-span-12 sm:col-span-8'>
                 <Controller
                   control={control}
@@ -164,7 +167,7 @@ export default function Profile() {
                       <InputNumber
                         value={field.value ?? ''}
                         onChange={field.onChange}
-                        placeholder='Nhập số điện thoại'
+                        placeholder={t('my-profile.enter-phone-number')}
                         isErrorPossible={true}
                         errorMessage={errors.phone?.message}
                         classNameInput='outline-none border border-gray-400 py-2 px-2 w-full rounded-md focus:border-black'
@@ -176,21 +179,25 @@ export default function Profile() {
             </div>
 
             <div className='mt-2 grid grid-cols-12 items-start gap-2'>
-              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>Địa chỉ</div>
+              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>
+                {t('my-profile.address')}
+              </div>
               <div className='col-span-12 sm:col-span-8'>
                 <Input
                   register={register}
                   name='address'
                   isErrorPossible={true}
                   errorMessage={errors.address?.message}
-                  placeholder='Nhập địa chỉ'
+                  placeholder={t('my-profile.enter-phone-number')}
                   classNameInput='outline-none border border-gray-400 py-2 px-2 w-full rounded-md focus:border-black'
                 />
               </div>
             </div>
 
             <div className='mt-2 grid grid-cols-12 items-start gap-2'>
-              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>Ngày sinh</div>
+              <div className='col-span-12 sm:col-span-4 text-left sm:text-right sm:pr-2 sm:pt-2'>
+                {t('my-profile.dob')}
+              </div>
               <div className='col-span-12 sm:col-span-8'>
                 <Controller
                   control={control}
@@ -230,11 +237,11 @@ export default function Profile() {
                 onClick={onClickButtonSelectAvatar}
                 className='py-2 px-3 capitalize border border-gray-400 rounded-md hover:bg-gray-100'
               >
-                Chọn ảnh
+                {t('my-profile.select-picture')}
               </button>
-              <div className=''>
-                <p>Dụng lượng file tối đa 1 MB</p>
-                <p>Phải là định dạng ảnh </p>
+              <div className='flex flex-col gap-[2px]'>
+                <p>{t('my-profile.maximum-file-size')}</p>
+                <p>{t('my-profile.file-format')} </p>
               </div>
             </div>
           </div>
@@ -244,7 +251,7 @@ export default function Profile() {
             type='submit'
             className='col-span-5 col-start-8 sm:col-span-4 sm:col-start-9 lg:col-span-3 lg:col-start-6 xl:col-span-2 xl:col-start-7 py-2 bg-orange text-white rounded-md hover:bg-orange/90'
           >
-            Lưu lại
+            {t('my-profile.save')}
           </button>
         </div>
       </form>

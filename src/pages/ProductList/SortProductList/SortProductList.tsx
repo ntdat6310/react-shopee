@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import { omit } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
 import ArrowLeft from 'src/components/Pagination/ArrowLeft'
@@ -13,6 +14,8 @@ interface Props {
 }
 
 export default function SortProductList({ total_page }: Props) {
+  const { t } = useTranslation('products')
+
   const queryConfig = useQueryConfig()
   const navigate = useNavigate()
 
@@ -38,7 +41,7 @@ export default function SortProductList({ total_page }: Props) {
   }
   return (
     <div className='flex items-center flex-wrap px-2 py-3 rounded-sm bg-gray-300 gap-3'>
-      <div className=''>Sắp xếp theo</div>
+      <div>{t('order.order-by')}</div>
       <Button
         className={classNames(
           'shadow-sm capitalize px-4 rounded-sm h-8 text-sm',
@@ -53,7 +56,7 @@ export default function SortProductList({ total_page }: Props) {
           handleSortBy(ProductSortBy.CreateAt)
         }}
       >
-        Mới nhất
+        {t('order.newest')}
       </Button>
       <Button
         className={classNames(
@@ -69,7 +72,7 @@ export default function SortProductList({ total_page }: Props) {
           handleSortBy(ProductSortBy.View)
         }}
       >
-        Phổ biến
+        {t('order.popularity')}
       </Button>
 
       <Button
@@ -86,7 +89,7 @@ export default function SortProductList({ total_page }: Props) {
           handleSortBy(ProductSortBy.Sold)
         }}
       >
-        Bán chạy
+        {t('order.best-selling')}
       </Button>
       <select
         value={queryConfig.order || ''}
@@ -102,13 +105,13 @@ export default function SortProductList({ total_page }: Props) {
         )}
       >
         <option className='bg-white text-black' value='' disabled>
-          Giá
+          {t('order.price')}
         </option>
         <option className='bg-white text-black' value={ProductOrder.Asc}>
-          Giá: Thấp đến cao
+          {t('order.price-low-to-high')}
         </option>
         <option className='bg-white text-black' value={ProductOrder.Desc}>
-          Giá: Cao đến thấp
+          {t('order.price-high-to-low')}
         </option>
       </select>
       <div className='flex items-center gap-2 ml-auto'>

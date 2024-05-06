@@ -1,0 +1,37 @@
+{
+  "my-profile": {
+    "my-profile": "Hồ Sơ Của Tôi",
+    "my-profile-description": "Quản lý thông tin hồ sơ để bảo mật tài khoản",
+    "name": "Họ Tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "dob": "Ngày sinh",
+    "select-picture": "Chọn Ảnh",
+    "maximum-file-size": "Dụng lượng file tối đa 1 MB",
+    "file-format": "Phải là định dạng ảnh",
+    "save": "Lưu lại",
+    "enter-phone-number": "Nhập số điện thoại",
+    "enter-name": "Nhập họ tên",
+    "enter-address": "Nhập địa chỉ",
+    "image-file-must-be-max-1MB": "File ảnh phải có dung lượng tối đa 1MB"
+  },
+
+  "change-password": {
+    "change-password": "Đổi Mật Khẩu",
+    "change-password-description": "Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác",
+    "password": "Mật khẩu",
+    "new-password": "Mật khẩu Mới",
+    "confirm-password": "Nhập lại",
+    "submit": "Gửi",
+    "password-changed-successfully": "Đổi mật khẩu thành công"
+  },
+  "purchases": {
+    "purchases": "Đơn Mua",
+    "all": "Tất cả",
+    "wait-for-confirmation": "Chờ xác nhận",
+    "wait-for-getting": "Chờ lấy hàng",
+    "delivering": "Đang giao",
+    "delivered": "Đã giao",
+    "cancelled": "Đã hủy"
+  }
+}

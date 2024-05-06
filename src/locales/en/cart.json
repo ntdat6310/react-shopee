@@ -1,0 +1,14 @@
+{
+  "product": "Product",
+  "unit-price": "Unit Price",
+  "quantity": "Quantity",
+  "total-amount": "Total Amount",
+  "action": "Action",
+  "select-all": "Select All ({{count}})",
+  "delete": "Delete",
+  "total-payment": "Total Payment ({{count}} items)",
+  "save": "Save",
+  "buy-now": "Buy Now",
+  "confirm-delete": "You want to delete {{count}} products",
+  "cancel": "Cancel"
+}

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import productApi from 'src/apis/product.api'
 import purchaseApi from 'src/apis/purchase.api'
@@ -27,6 +28,8 @@ import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 
 export default function Product() {
+  const { t } = useTranslation('product')
+
   const queryClient = useQueryClient()
   const { isAuthenticated } = useContext(AppContext)
   const navigate = useNavigate()
@@ -257,12 +260,12 @@ export default function Product() {
                 <div className='h-6 w-[1px] bg-gray-400'></div>
                 <div className=''>
                   <span>{formatNumberToSocialStyle(productData.data.data.view ?? 0)}</span>
-                  <span className='ml-2 text-gray-500'>Lượt xem</span>
+                  <span className='ml-2 text-gray-500'>{t('views')}</span>
                 </div>
                 <div className='h-6 w-[1px] bg-gray-400'></div>
                 <div className=''>
                   <span>{formatNumberToSocialStyle(productData.data.data.sold ?? 0)}</span>
-                  <span className='ml-2 text-gray-500'>Đã bán</span>
+                  <span className='ml-2 text-gray-500'>{t('sold')}</span>
                 </div>
               </div>
 
@@ -280,11 +283,11 @@ export default function Product() {
                 <div className='bg-red py-1 px-2 uppercase text-white rounded text-sm'>{`${calculateDiscountPercent({
                   origin: productData.data.data.price_before_discount ?? 0,
                   sale: productData.data.data.price ?? 0
-                })}% giảm`}</div>
+                })}% ${t('discount')}`}</div>
               </div>
 
               <div className={'flex items-center flex-wrap mt-6 gap-5'}>
-                <div className='capitalize text-gray-500'>Số lượng</div>
+                <div className='capitalize text-gray-500'>{t('quantity')}</div>
                 <QuantityController
                   max={productData.data.data.quantity}
                   onIncrease={handleCountChange}
@@ -292,7 +295,9 @@ export default function Product() {
                   onType={handleCountChange}
                   value={buyCount}
                 />
-                <div className='text-sm text-gray-500'>{productData.data.data.quantity} sản phẩm có sẵn</div>
+                <div className='text-sm text-gray-500'>
+                  {productData.data.data.quantity} {t('available')}
+                </div>
               </div>
 
               <div className='mt-6 flex items-center flex-wrap gap-5'>
@@ -314,14 +319,14 @@ export default function Product() {
                       d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
                     />
                   </svg>
-                  <span className='capitalize text-red text-xs'>Thêm vào giỏ hàng</span>
+                  <span className='capitalize text-red text-xs'>{t('add-to-cart')}</span>
                 </button>
 
                 <button
                   onClick={handleBuyNow}
                   className='h-10 px-10 capitalize bg-red text-white rounded text-xs hover:bg-red/80'
                 >
-                  Mua ngay
+                  {t('buy-now')}
                 </button>
               </div>
             </div>
@@ -333,7 +338,7 @@ export default function Product() {
         <div className='max-w-7xl mx-auto'>
           <div className='grid grid-cols-12 gap-3 xl:gap-5'>
             <div className='col-span-12 md:col-span-8 xl:col-span-9 bg-white p-4 lg:p-6 rounded'>
-              <h2 className='text-xl font-semibold'>Mô tả sản phẩm</h2>
+              <h2 className='text-xl font-semibold'>{t('product-description')}</h2>
               <div className='mt-4 leading-loose text-sm'>
                 <div
                   dangerouslySetInnerHTML={{
@@ -343,7 +348,7 @@ export default function Product() {
               </div>
             </div>
             <div className='col-span-12 md:col-span-4 xl:col-span-3 bg-white p-4 lg:p-6 rounded'>
-              <h2 className='text-lg font-semibold text-gray-600 text-center'>Sản phẩm bán chạy</h2>
+              <h2 className='text-lg font-semibold text-gray-600 text-center'>{t('top-selling-products')}</h2>
               <div className='mt-4 flex flex-col gap-8'>
                 {topSoldProducts &&
                   topSoldProducts.data.data?.products?.map((product, index) => {

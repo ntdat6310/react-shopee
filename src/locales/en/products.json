@@ -1,0 +1,27 @@
+{
+  "aside-filter": {
+    "all-categories": {
+      "all-categories": "All Categories",
+      "t_shirt": "T shirt",
+      "watch": "Watch",
+      "phone": "Phone"
+    },
+    "search-filter": "Search Filter",
+    "price-range": "Price Range",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply",
+    "review": "Review",
+    "or-above": "or above",
+    "clear-all": "Clear All"
+  },
+  "order": {
+    "order-by": "Sort by",
+    "price": "Price",
+    "newest": "Newest",
+    "popularity": "Popularity",
+    "best-selling": "Best Selling",
+    "price-high-to-low": "Price: High to Low",
+    "price-low-to-high": "Price: Low to High"
+  }
+}

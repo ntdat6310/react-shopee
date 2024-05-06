@@ -1,0 +1,12 @@
+{
+  "items-in-cart": "There are {{count}} items in the cart",
+  "search-product": "Search product",
+  "order": "Orders",
+  "profile": "Profile",
+  "no-product-in-cart": "No product in cart",
+  "log-in": "Login",
+  "register": "Register",
+  "log-out": "Logout",
+  "view-cart": "View cart",
+  "newly-added-products": "Newly added products"
+}

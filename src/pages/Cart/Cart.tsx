@@ -12,6 +12,7 @@ import { formatCurrency } from 'src/utils/utils'
 import Spinner from 'src/components/Spinner'
 import NoProductInCart from 'src/components/ShoppingCart/NoProductInCart'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export interface ExtendedPurchase extends Purchase {
   checked: boolean
@@ -30,7 +31,7 @@ export default function Cart() {
     queryKey: ['purchases', PurchaseStatus.inCart],
     queryFn: () => purchaseApi.getPurchases({ status: PurchaseStatus.inCart })
   })
-
+  const { t } = useTranslation('cart')
   const { state } = useLocation()
   const selectedProductId = state?.productId
 
@@ -150,10 +151,11 @@ export default function Cart() {
     if (checkedPurchases.length > 0) {
       MySwal.fire({
         icon: 'warning',
-        title: `Bạn muốn xóa ${checkedPurchases.length} sản phẩm`,
+        title: t('confirm-delete', { count: checkedPurchases.length }),
         showCancelButton: true,
         showCloseButton: true,
-        confirmButtonText: 'Xóa'
+        confirmButtonText: t('delete'),
+        cancelButtonText: t('cancel')
       }).then((result) => {
         if (result.isConfirmed) {
           deletePurchaseMutation.mutate(checkedPurchases.map((item) => item._id))
@@ -202,15 +204,15 @@ export default function Cart() {
                             checked={isCheckedAll}
                           />
                         </div>
-                        <div className='text-black flex-grow'>Sản phẩm</div>
+                        <div className='text-black flex-grow'>{t('product')}</div>
                       </div>
                     </div>
                     <div className='col-span-7'>
                       <div className='grid grid-cols-10'>
-                        <div className='col-span-3 py-5 text-center'>Đơn giá</div>
-                        <div className='col-span-3 py-5 text-center'>Số lượng</div>
-                        <div className='col-span-2 py-5 text-center'>Số tiền</div>
-                        <div className='col-span-2 py-5 text-center'>Thao tác</div>
+                        <div className='col-span-3 py-5 text-center'>{t('unit-price')}</div>
+                        <div className='col-span-3 py-5 text-center'>{t('quantity')}</div>
+                        <div className='col-span-2 py-5 text-center'>{t('total-amount')}</div>
+                        <div className='col-span-2 py-5 text-center'>{t('action')}</div>
                       </div>
                     </div>
                   </div>
@@ -242,22 +244,24 @@ export default function Cart() {
                       checked={isCheckedAll}
                     />
                   </div>
-                  <div className='capitalize'>Chọn tất cả ({extendedPurchases.length})</div>
+                  <div className='capitalize'>{t('select-all', { count: extendedPurchases.length })}</div>
                   <button
                     onClick={handleDeleteManyPurchases}
                     className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'
                   >
-                    Xóa
+                    {t('delete')}
                   </button>
                 </div>
                 <div className='flex flex-col justify-start items-start lg:flex-row lg:items-center mt-3 lg:mt-0'>
                   <div className='flex flex-col items-start lg:items-end gap-1 sm:ml-4 lg:ml-0'>
                     <div className=''>
-                      <span className='text-xs sm:text-sm'>{`Tổng thanh toán (${checkedPurchases.length} sản phẩm)`}</span>
+                      <span className='text-xs sm:text-sm'>
+                        {t('total-payment', { count: checkedPurchases.length })}
+                      </span>
                       <span className='text-base sm:text-xl text-orange ml-1'>{`₫${formatCurrency(totalCheckedPurchasesPrice)}`}</span>
                     </div>
                     <div className='text-xs'>
-                      <span className='mr-2'>Tiết kiệm</span>
+                      <span className='mr-2'>{t('save')}</span>
                       <span>{`₫${formatCurrency(totalCheckedPurchasesSavingPrice)}`}</span>
                     </div>
                   </div>
@@ -266,7 +270,7 @@ export default function Cart() {
                     onClick={buyPurchases}
                     className='mt-3 lg:mt-0 sm:ml-4 capitalize py-2 lg:py-3 px-6  lg:px-10 bg-orange rounded text-white lg:text-base'
                   >
-                    Mua hàng
+                    {t('buy-now')}
                   </button>
                 </div>
               </div>

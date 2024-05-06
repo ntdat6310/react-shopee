@@ -8,6 +8,7 @@ import { AppContext } from 'src/contexts/app.context'
 import path from 'src/constants/path'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
 import NoProductInCart from './NoProductInCart'
+import { useTranslation } from 'react-i18next'
 interface Props {
   classNames?: string
 }
@@ -20,6 +21,7 @@ export default function ShoppingCart({ classNames = '' }: Props) {
     queryFn: () => purchaseApi.getPurchases({ status: PurchaseStatus.inCart }),
     enabled: isAuthenticated
   })
+  const { t } = useTranslation('header')
   const inCartPurchasesData = data?.data.data || []
   return (
     <Popover
@@ -28,7 +30,7 @@ export default function ShoppingCart({ classNames = '' }: Props) {
         <div className='bg-white shadow-md text-gray-600 max-w-[350px] md:max-w-[400px] lg:max-w-[500px] text-sm'>
           {inCartPurchasesData.length > 0 ? (
             <>
-              <div className='p-4 capitalize text-gray-400'>Sản phẩm mới thêm</div>
+              <div className='p-4 capitalize text-gray-400'>{t('newly-added-products')}</div>
               {inCartPurchasesData.slice(0, MAX_SHOW_PRODUCTS_IN_CART).map((item, index) => {
                 return (
                   <Link
@@ -57,12 +59,12 @@ export default function ShoppingCart({ classNames = '' }: Props) {
                 )
               })}
               <div className='flex flex-wrap items-center justify-center lg:justify-between mt-4 gap-2'>
-                <span className='text-gray-400 pl-4'>Có {inCartPurchasesData.length} sản phẩm trong giỏ hàng</span>
+                <span className='text-gray-400 pl-4'>{t('items-in-cart', { count: inCartPurchasesData.length })}</span>
                 <Link
                   to={path.cart}
                   className='py-2 px-4 w-full lg:w-auto text-center bg-orange hover:bg-opacity-90 transition-all text-white capitalize'
                 >
-                  Xem giỏ hàng
+                  {t('view-cart')}
                 </Link>
               </div>
             </>

@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { omit } from 'lodash'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button/Button'
 import InputNumber from 'src/components/InputNumber'
@@ -19,6 +20,11 @@ interface Props {
 type FormData = Pick<Schema, 'price_max' | 'price_min'>
 const schema = priceSchema.pick(['price_min', 'price_max'])
 
+const categoryItems = {
+  t_shirt: 'Áo thun',
+  watch: 'Đồng hồ',
+  phone: 'Điện thoại'
+}
 export default function AsideFilter({ categories, queryConfig }: Props) {
   const {
     control,
@@ -33,6 +39,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
     },
     resolver: yupResolver(schema)
   })
+  const { t } = useTranslation('products')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -70,6 +77,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
   const isStarListActive = (rating: number) => {
     return queryConfig.rating_filter && queryConfig.rating_filter === String(rating)
   }
+
   return (
     <div>
       <div
@@ -98,7 +106,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           }}
           className='font-bold capitalize'
         >
-          Tất cả danh mục
+          {t('aside-filter.all-categories.all-categories')}
         </Link>
       </div>
       <div className='my-4 h-[1px] bg-gray-300'></div>
@@ -115,7 +123,13 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
               })}
               key={categoryItem._id}
             >
-              {categoryItem.name}
+              {t(
+                `aside-filter.all-categories.${Object.keys(categoryItems).find(
+                  (key) =>
+                    categoryItems[key as keyof typeof categoryItems].toLowerCase() === categoryItem.name.toLowerCase()
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                )}` as any
+              )}
             </Link>
           )
         })}
@@ -135,10 +149,10 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             d='M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z'
           />
         </svg>
-        <div className='capitalize font-bold'>bộ lọc tìm kiếm</div>
+        <div className='capitalize font-bold'>{t('aside-filter.search-filter')}</div>
       </div>
       <div className='my-4 h-[1px] bg-gray-300'></div>
-      <div className='capitalize mb-4'>Khoảng giá</div>
+      <div className='capitalize mb-4'>{t('aside-filter.price-range')}</div>
       <form onSubmit={onSubmitPriceFilter}>
         <div className='flex items-center justify-between gap-2'>
           <Controller
@@ -147,7 +161,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             render={({ field }) => {
               return (
                 <InputNumber
-                  placeholder='Từ'
+                  placeholder={t('aside-filter.from')}
                   type='text'
                   classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
                   onChange={(event) => {
@@ -167,7 +181,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
             render={({ field }) => {
               return (
                 <InputNumber
-                  placeholder='Đến'
+                  placeholder={t('aside-filter.to')}
                   type='text'
                   classNameInput='p-3 w-full outline-none border-[2px] border-gray-400 focus:border-gray-900 focus:shadow-sm rounded-md bg-blue-50 text-sm'
                   onChange={(event) => {
@@ -188,12 +202,12 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
           type='submit'
           className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'
         >
-          Áp dụng
+          {t('aside-filter.apply')}
         </Button>
       </form>
 
       <div className='mt-8 mb-4 h-[1px] bg-gray-300'></div>
-      <div className='capitalize mb-4'>Đánh giá</div>
+      <div className='capitalize mb-4'>{t('aside-filter.review')}</div>
       <div className='pl-3 flex flex-col gap-1 items-baseline'>
         {Array(5)
           .fill(0)
@@ -211,7 +225,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
                   numberOfStarsFilled={rating}
                   className='cursor-pointer hover:opacity-50 gap-1'
                 />
-                {rating < 5 && <span>Trở lên</span>}
+                {rating < 5 && <span>{t('aside-filter.or-above')}</span>}
               </div>
             )
           })}
@@ -222,7 +236,7 @@ export default function AsideFilter({ categories, queryConfig }: Props) {
         onClick={handleClearAllFilter}
         className='bg-orange uppercase text-center py-2 w-full rounded-md text-white hover:bg-opacity-90'
       >
-        Xóa tất cả
+        {t('aside-filter.clear-all')}
       </Button>
     </div>
   )

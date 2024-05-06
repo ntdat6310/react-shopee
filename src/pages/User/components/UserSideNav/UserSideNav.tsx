@@ -1,11 +1,14 @@
 import classNames from 'classnames'
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, NavLink } from 'react-router-dom'
 import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { getAvatarUrl } from 'src/utils/utils'
 
 export default function UserSideNav() {
+  const { t } = useTranslation('user')
+
   const { profile } = useContext(AppContext)
   return (
     <div className=''>
@@ -45,7 +48,7 @@ export default function UserSideNav() {
               d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
             />
           </svg>
-          <div>Hồ sơ của tôi</div>
+          <div>{t('my-profile.my-profile')}</div>
         </NavLink>
       </div>
 
@@ -73,7 +76,7 @@ export default function UserSideNav() {
             />
           </svg>
 
-          <div>Đổi mật khẩu</div>
+          <div>{t('change-password.change-password')}</div>
         </NavLink>
       </div>
 
@@ -101,7 +104,7 @@ export default function UserSideNav() {
             />
           </svg>
 
-          <div>Đơn mua</div>
+          <div>{t('purchases.purchases')}</div>
         </NavLink>
       </div>
     </div>

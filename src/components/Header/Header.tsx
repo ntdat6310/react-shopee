@@ -9,10 +9,12 @@ import { useForm } from 'react-hook-form'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { omit } from 'lodash'
 import ShopeeLogo from '../ShopeeLogo'
+import { useTranslation } from 'react-i18next'
 interface FormData {
   search: string
 }
 export default function Header() {
+  const { t } = useTranslation('header')
   const { isAuthenticated } = useContext(AppContext)
   const queryConfig = useQueryConfig()
   const { register, handleSubmit, setValue } = useForm<FormData>({
@@ -57,10 +59,10 @@ export default function Header() {
             {!isAuthenticated && (
               <div className='flex items-center divide-x text-white capitalize'>
                 <Link to={path.register} className='px-3 hover:text-gray-200'>
-                  Đăng ký
+                  {t('register')}
                 </Link>
                 <Link to={path.login} className='px-3 hover:text-gray-200'>
-                  Đăng nhập
+                  {t('log-in')}
                 </Link>
               </div>
             )}
@@ -75,7 +77,7 @@ export default function Header() {
             <div className='bg-white p-1 flex items-center rounded-md'>
               <input
                 type='text'
-                placeholder='Tìm kiếm sản phẩm'
+                placeholder={t('search-product')}
                 className='text-black px-3 py-2 flex-grow border-none outline-none text-lg bg-transparent w-[80%] sm:w-auto'
                 {...register('search')}
               />

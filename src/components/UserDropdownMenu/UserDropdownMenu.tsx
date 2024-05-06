@@ -8,8 +8,10 @@ import { PurchaseStatus } from 'src/constants/purchaseStatus.enum'
 import { AppContext } from 'src/contexts/app.context'
 import { getAvatarUrl } from 'src/utils/utils'
 import Popover from '../Popover'
+import { useTranslation } from 'react-i18next'
 
 export default function UserDropdownMenu() {
+  const { t } = useTranslation('header')
   const { setIsAuthenticated, setProfile, profile } = useContext(AppContext)
   const queryClient = useQueryClient()
   const logoutMutation = useMutation({
@@ -32,15 +34,15 @@ export default function UserDropdownMenu() {
   return (
     <Popover
       renderPopover={
-        <div className='bg-white flex flex-col shadow-md items-start text-gray-600 text-[20px] '>
-          <Link to={path.profile}>
-            <div className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>Tài khoản của tôi</div>
+        <div className='bg-white flex flex-col shadow-md items-start text-gray-600 text-[20px] min-w-[150px] '>
+          <Link className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all' to={path.profile}>
+            {t('profile')}
           </Link>
           <Link to={path.historyPurchase} className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all'>
-            Đơn mua
+            {t('order')}
           </Link>
           <button className='py-2 px-4 w-full text-left hover:bg-gray-200 transition-all' onClick={handleLogout}>
-            Đăng xuất
+            {t('log-out')}
           </button>
         </div>
       }

@@ -1,0 +1,37 @@
+{
+  "my-profile": {
+    "my-profile": "My profile",
+    "my-profile-description": "Manage profile information to secure your account",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "dob": "Date of birth",
+    "select-picture": "Select picture",
+    "maximum-file-size": "Maximum file size of 1 MB",
+    "file-format": "Must be in image format",
+    "save": "Save",
+    "enter-phone-number": "Enter Phone Number",
+    "enter-name": "Enter Name",
+    "enter-address": "Enter Address",
+    "image-file-must-be-max-1MB": "Image file must be maximum 1MB"
+  },
+
+  "change-password": {
+    "change-password": "Change password",
+    "change-password-description": "To secure your account, please do not share your password with others",
+    "password": "Password",
+    "new-password": "New password",
+    "confirm-password": "Confirm password",
+    "submit": "Submit",
+    "password-changed-successfully": "Password changed successfully"
+  },
+  "purchases": {
+    "purchases": "Purchases",
+    "all": "All",
+    "wait-for-confirmation": "Wait for confirmation",
+    "wait-for-getting": "Wait for getting",
+    "delivering": "Delivering",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  }
+}

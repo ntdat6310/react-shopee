@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next'
+
 export default function NoProductInCart() {
+  const { t } = useTranslation('header')
   return (
     <div className='flex flex-col items-center p-4 md:p-8'>
       <img
@@ -6,7 +9,7 @@ export default function NoProductInCart() {
         alt='img-no-product-in-cart'
         className='w-40 h-40'
       />
-      <div className='capitalize mt-2 text-center'>Không có sản phẩm trong giỏ hàng</div>
+      <div className='capitalize mt-2 text-center'>{t('no-product-in-cart')}</div>
     </div>
   )
 }

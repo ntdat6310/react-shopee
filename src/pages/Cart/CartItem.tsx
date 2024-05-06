@@ -3,6 +3,7 @@ import QuantityController from 'src/components/QuantityController'
 import { ExtendedPurchase } from './Cart'
 import path from 'src/constants/path'
 import { formatCurrency, generateNameId } from 'src/utils/utils'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   purchase: ExtendedPurchase
@@ -21,6 +22,8 @@ export default function CartItem({
   handleOnBlue,
   onDelete
 }: Props) {
+  const { t } = useTranslation('cart')
+
   return (
     <div className='grid grid-cols-12 shadow border-[1px] border-gray-200'>
       <div className='col-span-5 py-5'>
@@ -78,7 +81,7 @@ export default function CartItem({
                 onClick={onDelete}
                 className='capitalize py-[2px] px-1 text-orange hover:text-red border-b-[1px] border-transparent hover:border-orange transition-all'
               >
-                Xóa
+                {t('delete')}
               </button>
             </div>
           </div>
