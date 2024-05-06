@@ -8,6 +8,8 @@ import App from './App.tsx'
 import './index.css'
 import { AppProvider } from './contexts/app.context.tsx'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
+import ServerError from './components/ServerError/ServerError.tsx'
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,7 +31,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <ToastContainer />
-          <App />
+          <ErrorBoundary fallback={<ServerError />}>
+            <App />
+          </ErrorBoundary>
         </AppProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
